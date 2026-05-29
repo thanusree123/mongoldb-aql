@@ -76,17 +76,32 @@
 // }
 
 // switch statements
-const user="customer"
-switch(user){
-    case "admin":
-    console.log("full access")
-    break
-    case "editor":
-    console.log("content modification")
-    break
-    default:
-        console.log("no access")
-}
+// const user="customer"
+// switch(user){
+//     case "admin":
+//     console.log("full access")
+//     break
+//     case "editor":
+//     console.log("content modification")
+//     break
+//     default:
+//         console.log("no access")
+// }
+
+// for loop
+// for(let i=0;i<5;i++){
+//     console.log(i)
+// }
+
+
+// while loop
+// let fuel=3
+// while(fuel>0){
+//     console.log("fuel level "+fuel)
+//     fuel--
+// }
+
+
 
 
 
