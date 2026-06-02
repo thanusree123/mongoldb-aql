@@ -101,6 +101,71 @@
 //     fuel--
 // }
 
+// functions
+function calculateTax(amount){
+    return amount*0.15
+}
+const taxvalue=calculateTax(100)
+console.log(taxvalue)
+
+// arrow funtion
+// const multiplysum=(num)=>{
+//     return num*2
+// }
+// const nums=multiplysum(5)
+// console.log(nums)
+
+
+// const multiplysum =num=>num*2
+// let nums= multiplysum(10)
+// console.log(nums)
+
+// // Initializing an Object
+// const serverConfig = {
+//     port: 3000,
+//     environment: "production",
+//     sslEnabled: true
+// };
+
+// // // Accessing Object Properties using Dot Notation
+// // console.log(`Server is initializing on port ${serverConfig.port} under ${serverConfig.environment}.`);
+
+
+
+
+// arrays
+const products=[
+    {id:1,name:"laptop",category:"electronic",prices:75000,quantity:2},
+    {id:2,name:"phone",category:"electronic",prices:30000,quantity:3},
+    {id:3,name:"shoes",category:"fashion",prices:4000,quantity:5},
+    {id:4,name:"watch",category:"fashion",prices:12000,quantity:1},
+    {id:5,name:"headphones",category:"electronic",prices:5000,quantity:4},
+];
+//  filter 
+const electronics=products.filter(product=>{
+    return product.category ==="electronic";
+});
+console.log(electronics)
+console.table(electronics)
+
+
+// map
+// Create new array with total value
+// total = price * quantity
+
+const productotals=products.map(product=>{
+    return{
+        name:product.name,
+        totalvalue:product.prices*product.quantity
+    };
+ });
+console.log(productotals)
+
+
+
+
+
+
 
 
 
