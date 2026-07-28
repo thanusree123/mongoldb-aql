@@ -1,0 +1,271 @@
+-- mysql> use company;
+-- Reading table information for completion of table and column names
+-- You can turn off this feature to get a quicker startup with -A
+
+-- Database changed
+-- mysql> select 
+--     -> emp_name from employee
+--     -> inner join employee
+--     -> on employee.manager_id=employee.manager_id;
+-- ERROR 1066 (42000): Not unique table/alias: 'employee'
+-- mysql> show tables;
+-- +-------------------+
+-- | Tables_in_company |
+-- +-------------------+
+-- | Customer          |
+-- | Department        |
+-- | Employee          |
+-- | Employee_Project  |
+-- | Orders            |
+-- | Project           |
+-- +-------------------+
+-- 6 rows in set (0.00 sec)
+
+-- mysql> select emp_name
+--     -> from Employee
+--     -> inner join Employee 
+--     -> on Employee.manager_id=Employee.manager_id;
+-- ERROR 1066 (42000): Not unique table/alias: 'Employee'
+-- mysql> select * from employee;
+-- +--------+----------+------+--------+-----------+------------+---------+------------+
+-- | emp_id | emp_name | age  | gender | salary    | hire_date  | dept_id | manager_id |
+-- +--------+----------+------+--------+-----------+------------+---------+------------+
+-- |      1 | Rahul    |   28 | Male   |  50000.00 | 2021-01-15 |     102 |         11 |
+-- |      2 | Priya    |   30 | Female |  65000.00 | 2020-03-20 |     101 |         12 |
+-- |      3 | Arjun    |   35 | Male   |  80000.00 | 2019-07-10 |     103 |         13 |
+-- |      4 | Sneha    |   26 | Female |  45000.00 | 2022-05-11 |     102 |         11 |
+-- |      5 | Kiran    |   32 | Male   |  72000.00 | 2018-09-18 |     104 |         14 |
+-- |      6 | Anjali   |   27 | Female |  55000.00 | 2021-11-05 |     105 |         15 |
+-- |      7 | Vikram   |   40 | Male   |  95000.00 | 2017-02-14 |     103 |         13 |
+-- |      8 | Meera    |   24 | Female |  42000.00 | 2023-01-08 |     101 |         12 |
+-- |      9 | Ravi     |   29 | Male   |  61000.00 | 2020-08-22 |     104 |         14 |
+-- |     10 | Divya    |   31 | Female |  70000.00 | 2019-10-30 |     105 |         15 |
+-- |     11 | Suresh   |   45 | Male   | 120000.00 | 2015-06-01 |     102 |       NULL |
+-- |     12 | Lakshmi  |   43 | Female | 115000.00 | 2014-09-12 |     101 |       NULL |
+-- |     13 | Manoj    |   48 | Male   | 130000.00 | 2013-04-16 |     103 |       NULL |
+-- |     14 | Ramesh   |   46 | Male   | 125000.00 | 2012-12-19 |     104 |       NULL |
+-- |     15 | Sunitha  |   44 | Female | 118000.00 | 2015-08-25 |     105 |       NULL |
+-- +--------+----------+------+--------+-----------+------------+---------+------------+
+-- 15 rows in set (0.00 sec)
+
+-- mysql> select e.emp_name as employee,
+--     -> m.emp_name as manager
+--     -> from employee e
+--     -> inner join employee m
+--     -> on e.manager_id=m.manager_id;
+-- +----------+---------+
+-- | employee | manager |
+-- +----------+---------+
+-- | Sneha    | Rahul   |
+-- | Rahul    | Rahul   |
+-- | Meera    | Priya   |
+-- | Priya    | Priya   |
+-- | Vikram   | Arjun   |
+-- | Arjun    | Arjun   |
+-- | Sneha    | Sneha   |
+-- | Rahul    | Sneha   |
+-- | Ravi     | Kiran   |
+-- | Kiran    | Kiran   |
+-- | Divya    | Anjali  |
+-- | Anjali   | Anjali  |
+-- | Vikram   | Vikram  |
+-- | Arjun    | Vikram  |
+-- | Meera    | Meera   |
+-- | Priya    | Meera   |
+-- | Ravi     | Ravi    |
+-- | Kiran    | Ravi    |
+-- | Divya    | Divya   |
+-- | Anjali   | Divya   |
+-- +----------+---------+
+-- 20 rows in set (0.00 sec)
+
+-- mysql> select e.emp_name as employee, m.emp_name as manager from employee e inner join employee m on e.manager_id=m.emp_id;
+-- +----------+---------+
+-- | employee | manager |
+-- +----------+---------+
+-- | Rahul    | Suresh  |
+-- | Priya    | Lakshmi |
+-- | Arjun    | Manoj   |
+-- | Sneha    | Suresh  |
+-- | Kiran    | Ramesh  |
+-- | Anjali   | Sunitha |
+-- | Vikram   | Manoj   |
+-- | Meera    | Lakshmi |
+-- | Ravi     | Ramesh  |
+-- | Divya    | Sunitha |
+-- +----------+---------+
+-- 10 rows in set (0.00 sec)
+
+-- mysql> select e.emp_name,
+--     -> e.salary as employeesalary,
+--     -> m.manager_name,
+--     -> m.salary as managersalary
+--     -> from employee e 
+--     -> inner join employee m
+--     -> on e.manager_id=m.emp_id;
+-- ERROR 1054 (42S22): Unknown column 'm.manager_name' in 'field list'
+-- mysql> select e.emp_name, e.salary as employeesalary, m.emp_name, m.salary as managersalary from employee e  inner join employee m on e.manager_id=m.emp_id;
+-- +----------+----------------+----------+---------------+
+-- | emp_name | employeesalary | emp_name | managersalary |
+-- +----------+----------------+----------+---------------+
+-- | Rahul    |       50000.00 | Suresh   |     120000.00 |
+-- | Priya    |       65000.00 | Lakshmi  |     115000.00 |
+-- | Arjun    |       80000.00 | Manoj    |     130000.00 |
+-- | Sneha    |       45000.00 | Suresh   |     120000.00 |
+-- | Kiran    |       72000.00 | Ramesh   |     125000.00 |
+-- | Anjali   |       55000.00 | Sunitha  |     118000.00 |
+-- | Vikram   |       95000.00 | Manoj    |     130000.00 |
+-- | Meera    |       42000.00 | Lakshmi  |     115000.00 |
+-- | Ravi     |       61000.00 | Ramesh   |     125000.00 |
+-- | Divya    |       70000.00 | Sunitha  |     118000.00 |
+-- +----------+----------------+----------+---------------+
+-- 10 rows in set (0.00 sec)
+
+-- mysql> select e.emp_name,
+--     -> e.age,
+--     -> ^C
+-- mysql> select e.emp_name,
+--     -> e.age as emp_age,
+--     -> m.emp_name,
+--     -> m.age as manager_age
+--     -> from employee e 
+--     -> inner join employee m
+--     -> on e.manager_id=m.emp_id;
+-- +----------+---------+----------+-------------+
+-- | emp_name | emp_age | emp_name | manager_age |
+-- +----------+---------+----------+-------------+
+-- | Rahul    |      28 | Suresh   |          45 |
+-- | Priya    |      30 | Lakshmi  |          43 |
+-- | Arjun    |      35 | Manoj    |          48 |
+-- | Sneha    |      26 | Suresh   |          45 |
+-- | Kiran    |      32 | Ramesh   |          46 |
+-- | Anjali   |      27 | Sunitha  |          44 |
+-- | Vikram   |      40 | Manoj    |          48 |
+-- | Meera    |      24 | Lakshmi  |          43 |
+-- | Ravi     |      29 | Ramesh   |          46 |
+-- | Divya    |      31 | Sunitha  |          44 |
+-- +----------+---------+----------+-------------+
+-- 10 rows in set (0.00 sec)
+
+-- mysql> select 
+--     -> e.emp_name,
+--     -> ^C
+-- mysql> select
+--     -> e.emp_name as employee,
+--     -> m.emp_name as manager
+--     -> from employee e
+--     -> inner join employee m
+--     -> on e.manager_id=m.emp_id;
+-- +----------+---------+
+-- | employee | manager |
+-- +----------+---------+
+-- | Rahul    | Suresh  |
+-- | Priya    | Lakshmi |
+-- | Arjun    | Manoj   |
+-- | Sneha    | Suresh  |
+-- | Kiran    | Ramesh  |
+-- | Anjali   | Sunitha |
+-- | Vikram   | Manoj   |
+-- | Meera    | Lakshmi |
+-- | Ravi     | Ramesh  |
+-- | Divya    | Sunitha |
+-- +----------+---------+
+-- 10 rows in set (0.00 sec)
+
+-- mysql> select e.emp_name as employee, m.emp_name as manager from employee e left join employee m on e.manager_id=m.emp_id;
+-- +----------+---------+
+-- | employee | manager |
+-- +----------+---------+
+-- | Rahul    | Suresh  |
+-- | Priya    | Lakshmi |
+-- | Arjun    | Manoj   |
+-- | Sneha    | Suresh  |
+-- | Kiran    | Ramesh  |
+-- | Anjali   | Sunitha |
+-- | Vikram   | Manoj   |
+-- | Meera    | Lakshmi |
+-- | Ravi     | Ramesh  |
+-- | Divya    | Sunitha |
+-- | Suresh   | NULL    |
+-- | Lakshmi  | NULL    |
+-- | Manoj    | NULL    |
+-- | Ramesh   | NULL    |
+-- | Sunitha  | NULL    |
+-- +----------+---------+
+-- 15 rows in set (0.00 sec)
+
+-- mysql> select 
+--     -> e.emp_name as employee,
+--     -> m.emp_name as manager
+--     -> m.dept_id as mananger_dept
+--     -> from employee e inner join 
+--     -> employee m
+--     -> on e.manager_id=m.emp_id;
+-- ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'm.dept_id as mananger_dept
+-- from employee e inner join 
+-- employee m
+-- on e.manager_i' at line 4
+-- mysql> select  e.emp_name as employee, m.emp_name as manager m.dept_id as mananger_dept from employee e left join  employee m on e.manager_id=m.emp_id;
+-- ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'm.dept_id as mananger_dept from employee e left join  employee m on e.manager_id' at line 1
+-- mysql> SELECT
+--     -> e.emp_name AS Employee,
+--     -> m.emp_name AS Manager,
+--     -> m.dept_id AS ManagerDepartment
+--     -> FROM Employee e
+--     -> LEFT JOIN Employee m
+--     -> ON e.manager_id = m.emp_id;
+-- +----------+---------+-------------------+
+-- | Employee | Manager | ManagerDepartment |
+-- +----------+---------+-------------------+
+-- | Rahul    | Suresh  |               102 |
+-- | Priya    | Lakshmi |               101 |
+-- | Arjun    | Manoj   |               103 |
+-- | Sneha    | Suresh  |               102 |
+-- | Kiran    | Ramesh  |               104 |
+-- | Anjali   | Sunitha |               105 |
+-- | Vikram   | Manoj   |               103 |
+-- | Meera    | Lakshmi |               101 |
+-- | Ravi     | Ramesh  |               104 |
+-- | Divya    | Sunitha |               105 |
+-- | Suresh   | NULL    |              NULL |
+-- | Lakshmi  | NULL    |              NULL |
+-- | Manoj    | NULL    |              NULL |
+-- | Ramesh   | NULL    |              NULL |
+-- | Sunitha  | NULL    |              NULL |
+-- +----------+---------+-------------------+
+-- 15 rows in set (0.00 sec)
+
+-- mysql> select 
+--     -> m.emp_name as manager,
+--     -> count(e.emp_id) as totalemployee
+--     -> from employee m
+--     -> left join employee e
+--     -> on m.emp_id=e.manager_id
+--     -> group by m.emp_id,e.emp_name;
+-- +---------+---------------+
+-- | manager | totalemployee |
+-- +---------+---------------+
+-- | Rahul   |             0 |
+-- | Priya   |             0 |
+-- | Arjun   |             0 |
+-- | Sneha   |             0 |
+-- | Kiran   |             0 |
+-- | Anjali  |             0 |
+-- | Vikram  |             0 |
+-- | Meera   |             0 |
+-- | Ravi    |             0 |
+-- | Divya   |             0 |
+-- | Suresh  |             1 |
+-- | Suresh  |             1 |
+-- | Lakshmi |             1 |
+-- | Lakshmi |             1 |
+-- | Manoj   |             1 |
+-- | Manoj   |             1 |
+-- | Ramesh  |             1 |
+-- | Ramesh  |             1 |
+-- | Sunitha |             1 |
+-- | Sunitha |             1 |
+-- +---------+---------------+
+-- 20 rows in set (0.00 sec)
+
+-- mysql> 
