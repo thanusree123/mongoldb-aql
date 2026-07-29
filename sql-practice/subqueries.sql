@@ -1,0 +1,360 @@
+-- mysql> select 
+--     -> ^C
+-- mysql> use company;
+-- Reading table information for completion of table and column names
+-- You can turn off this feature to get a quicker startup with -A
+
+-- Database changed
+-- mysql> select 
+--     -> ^C
+-- mysql> select * 
+--     -> from employee
+--     -> where salary>{
+--     -> ^C
+-- mysql> select * 
+--     -> from employee
+--     -> where salary>(
+--     -> select avg(salary)
+--     -> from employee
+--     -> );
+-- +--------+----------+------+--------+-----------+------------+---------+------------+
+-- | emp_id | emp_name | age  | gender | salary    | hire_date  | dept_id | manager_id |
+-- +--------+----------+------+--------+-----------+------------+---------+------------+
+-- |      7 | Vikram   |   40 | Male   |  95000.00 | 2017-02-14 |     103 |         13 |
+-- |     11 | Suresh   |   45 | Male   | 120000.00 | 2015-06-01 |     102 |       NULL |
+-- |     12 | Lakshmi  |   43 | Female | 115000.00 | 2014-09-12 |     101 |       NULL |
+-- |     13 | Manoj    |   48 | Male   | 130000.00 | 2013-04-16 |     103 |       NULL |
+-- |     14 | Ramesh   |   46 | Male   | 125000.00 | 2012-12-19 |     104 |       NULL |
+-- |     15 | Sunitha  |   44 | Female | 118000.00 | 2015-08-25 |     105 |       NULL |
+-- +--------+----------+------+--------+-----------+------------+---------+------------+
+-- 6 rows in set (0.00 sec)
+
+-- mysql> select *
+--     -> from employe 
+--     -> ^C
+-- mysql> select *
+--     -> from employee
+--     -> where select=(
+--     -> select max(salary)
+--     -> from employee
+--     -> );
+-- ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'select=(
+-- select max(salary)
+-- from employee
+-- )' at line 3
+-- mysql> select *
+--     -> from employee
+--     -> where salary=(
+--     -> select max(salary)
+--     -> from empllyee
+--     -> );
+-- ERROR 1146 (42S02): Table 'company.empllyee' doesn't exist
+-- mysql> select * from employee where salary=( select max(salary) from employee );
+-- +--------+----------+------+--------+-----------+------------+---------+------------+
+-- | emp_id | emp_name | age  | gender | salary    | hire_date  | dept_id | manager_id |
+-- +--------+----------+------+--------+-----------+------------+---------+------------+
+-- |     13 | Manoj    |   48 | Male   | 130000.00 | 2013-04-16 |     103 |       NULL |
+-- +--------+----------+------+--------+-----------+------------+---------+------------+
+-- 1 row in set (0.00 sec)
+
+-- mysql> select * from 
+--     -> employee
+--     -> where age=(
+--     -> select min(age)
+--     -> from employee
+--     -> );
+-- +--------+----------+------+--------+----------+------------+---------+------------+
+-- | emp_id | emp_name | age  | gender | salary   | hire_date  | dept_id | manager_id |
+-- +--------+----------+------+--------+----------+------------+---------+------------+
+-- |      8 | Meera    |   24 | Female | 42000.00 | 2023-01-08 |     101 |         12 |
+-- +--------+----------+------+--------+----------+------------+---------+------------+
+-- 1 row in set (0.00 sec)
+
+-- mysql> select * from employee
+--     -> where dept_id=(
+--     -> select dept_id,
+--     -> from department
+--     -> where dept_name='HR'
+--     -> );
+-- ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from department
+-- where dept_name='HR'
+-- )' at line 4
+-- mysql> select * from employee where dept_id=( select dept_id from department where dept_name='HR' );
+-- +--------+----------+------+--------+-----------+------------+---------+------------+
+-- | emp_id | emp_name | age  | gender | salary    | hire_date  | dept_id | manager_id |
+-- +--------+----------+------+--------+-----------+------------+---------+------------+
+-- |      2 | Priya    |   30 | Female |  65000.00 | 2020-03-20 |     101 |         12 |
+-- |      8 | Meera    |   24 | Female |  42000.00 | 2023-01-08 |     101 |         12 |
+-- |     12 | Lakshmi  |   43 | Female | 115000.00 | 2014-09-12 |     101 |       NULL |
+-- +--------+----------+------+--------+-----------+------------+---------+------------+
+-- 3 rows in set (0.00 sec)
+
+-- mysql> select * from project 
+--     -> where budget=(
+--     -> select max(budget)
+--     -> from project
+--     -> ):
+--     -> ^C
+-- mysql> select * from project 
+--     -> where budget=(
+--     -> select max(budget)
+--     -> from project
+--     -> );
+-- +------------+--------------+------------+------------+
+-- | project_id | project_name | budget     | start_date |
+-- +------------+--------------+------------+------------+
+-- |        205 | AI Chatbot   | 1500000.00 | 2024-01-01 |
+-- +------------+--------------+------------+------------+
+-- 1 row in set (0.00 sec)
+
+-- mysql> select * from 
+--     -> from order
+--     -> where amount=(
+--     -> select max(amount)
+--     -> from orders
+--     -> );
+-- ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from order
+-- where amount=(
+-- select max(amount)
+-- from orders
+-- )' at line 2
+-- mysql> select * from  from orders where amount=( select max(amount) from orders );
+-- ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from orders where amount=( select max(amount) from orders )' at line 1
+-- mysql> SELECT *
+--     -> FROM Orders
+--     -> WHERE amount =
+--     -> (
+--     ->     SELECT MAX(amount)
+--     ->     FROM Orders
+--     -> );
+-- +----------+-------------+---------+------------+
+-- | order_id | customer_id | amount  | order_date |
+-- +----------+-------------+---------+------------+
+-- |     1007 |           2 | 9100.00 | 2024-01-21 |
+-- +----------+-------------+---------+------------+
+-- 1 row in set (0.01 sec)
+
+-- mysql> select * from employee
+--     -> where ^C
+-- mysql> select * from employee
+--     -> where dept_id=
+--     -> (
+--     -> select dept_id
+--     -> from department 
+--     -> where dept_name='IT'
+--     -> );
+-- +--------+----------+------+--------+-----------+------------+---------+------------+
+-- | emp_id | emp_name | age  | gender | salary    | hire_date  | dept_id | manager_id |
+-- +--------+----------+------+--------+-----------+------------+---------+------------+
+-- |      1 | Rahul    |   28 | Male   |  50000.00 | 2021-01-15 |     102 |         11 |
+-- |      4 | Sneha    |   26 | Female |  45000.00 | 2022-05-11 |     102 |         11 |
+-- |     11 | Suresh   |   45 | Male   | 120000.00 | 2015-06-01 |     102 |       NULL |
+-- +--------+----------+------+--------+-----------+------------+---------+------------+
+-- 3 rows in set (0.00 sec)
+
+-- mysql> select * from 
+--     -> employee
+--     -> where select>(
+--     -> ^C
+-- mysql> select * from employee
+--     -> where age>(
+--     -> select avg(age)
+--     -> from employee
+--     -> );
+-- +--------+----------+------+--------+-----------+------------+---------+------------+
+-- | emp_id | emp_name | age  | gender | salary    | hire_date  | dept_id | manager_id |
+-- +--------+----------+------+--------+-----------+------------+---------+------------+
+-- |      7 | Vikram   |   40 | Male   |  95000.00 | 2017-02-14 |     103 |         13 |
+-- |     11 | Suresh   |   45 | Male   | 120000.00 | 2015-06-01 |     102 |       NULL |
+-- |     12 | Lakshmi  |   43 | Female | 115000.00 | 2014-09-12 |     101 |       NULL |
+-- |     13 | Manoj    |   48 | Male   | 130000.00 | 2013-04-16 |     103 |       NULL |
+-- |     14 | Ramesh   |   46 | Male   | 125000.00 | 2012-12-19 |     104 |       NULL |
+-- |     15 | Sunitha  |   44 | Female | 118000.00 | 2015-08-25 |     105 |       NULL |
+-- +--------+----------+------+--------+-----------+------------+---------+------------+
+-- 6 rows in set (0.01 sec)
+
+-- mysql> select * from employee
+--     -> where^C
+-- mysql> select * from project
+--     -> where budget>(
+--     -> select avg(budget)
+--     -> from project
+--     -> );
+-- +------------+--------------+------------+------------+
+-- | project_id | project_name | budget     | start_date |
+-- +------------+--------------+------------+------------+
+-- |        202 | Banking App  | 1200000.00 | 2023-03-15 |
+-- |        205 | AI Chatbot   | 1500000.00 | 2024-01-01 |
+-- +------------+--------------+------------+------------+
+-- 2 rows in set (0.00 sec)
+
+-- mysql> select * from orders 
+--     -> select *
+--     -> from customer 
+--     -> where customer_id=
+--     -> (
+--     -> select customer_id
+--     -> from orders 
+--     -> where amount=
+--     -> (
+--     -> select max(amount)
+--     -> from orders
+--     -> )
+--     -> );
+-- ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'select *
+-- from customer 
+-- where customer_id=
+-- (
+-- select customer_id
+-- from orders 
+-- whe' at line 2
+-- mysql> show tables;
+-- +-------------------+
+-- | Tables_in_company |
+-- +-------------------+
+-- | Customer          |
+-- | Department        |
+-- | Employee          |
+-- | Employee_Project  |
+-- | Orders            |
+-- | Project           |
+-- +-------------------+
+-- 6 rows in set (0.02 sec)
+
+-- mysql> select * from order
+--     -> ^C
+-- mysql> seelct * from customer 
+--     -> where customer_id=
+--     -> (
+--     -> select customer_id
+--     -> from order 
+--     -> where amount=
+--     -> (
+--     -> select max(amount)
+--     -> from amount
+--     -> )
+--     -> );
+-- ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'seelct * from customer 
+-- where customer_id=
+-- (
+-- select customer_id
+-- from order 
+-- wher' at line 1
+-- mysql> select  * from customer  where customer_id= ( select customer_id from order  where amount= ( select max(amount) from amount ) );
+-- ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'order  where amount= ( select max(amount) from amount ) )' at line 1
+-- mysql> SELECT *
+--     -> FROM Customer
+--     -> WHERE customer_id =
+--     -> (
+--     ->     SELECT customer_id
+--     ->     FROM Orders
+--     ->     WHERE amount =
+--     ->     (
+--     ->         SELECT MAX(amount)
+--     ->         FROM Orders
+--     ->     )
+--     -> );
+-- +-------------+---------------+-------+
+-- | customer_id | customer_name | city  |
+-- +-------------+---------------+-------+
+-- |           2 | Neha          | Delhi |
+-- +-------------+---------------+-------+
+-- 1 row in set (0.00 sec)
+
+-- mysql> select * from employee 
+--     -> where dept_id=(
+--     -> select dept_id 
+--     -> from department 
+--     -> where dept_name='Finance'
+--     -> );
+-- +--------+----------+------+--------+-----------+------------+---------+------------+
+-- | emp_id | emp_name | age  | gender | salary    | hire_date  | dept_id | manager_id |
+-- +--------+----------+------+--------+-----------+------------+---------+------------+
+-- |      3 | Arjun    |   35 | Male   |  80000.00 | 2019-07-10 |     103 |         13 |
+-- |      7 | Vikram   |   40 | Male   |  95000.00 | 2017-02-14 |     103 |         13 |
+-- |     13 | Manoj    |   48 | Male   | 130000.00 | 2013-04-16 |     103 |       NULL |
+-- +--------+----------+------+--------+-----------+------------+---------+------------+
+-- 3 rows in set (0.01 sec)
+
+-- mysql> select * from project 
+--     -> where budget=(
+--     -> select max(budget) 
+--     -> from project
+--     -> );
+-- +------------+--------------+------------+------------+
+-- | project_id | project_name | budget     | start_date |
+-- +------------+--------------+------------+------------+
+-- |        205 | AI Chatbot   | 1500000.00 | 2024-01-01 |
+-- +------------+--------------+------------+------------+
+-- 1 row in set (0.00 sec)
+
+-- mysql> select * from project 
+--     -> where budget=(
+--     -> select min(budget)
+--     -> from project
+--     -> );
+-- +------------+----------------+-----------+------------+
+-- | project_id | project_name   | budget    | start_date |
+-- +------------+----------------+-----------+------------+
+-- |        201 | Payroll System | 500000.00 | 2023-01-01 |
+-- +------------+----------------+-----------+------------+
+-- 1 row in set (0.01 sec)
+
+-- mysql> select * from orders;
+-- +----------+-------------+---------+------------+
+-- | order_id | customer_id | amount  | order_date |
+-- +----------+-------------+---------+------------+
+-- |     1001 |           1 | 2500.00 | 2024-01-10 |
+-- |     1002 |           2 | 4500.00 | 2024-01-11 |
+-- |     1003 |           1 | 3200.00 | 2024-01-13 |
+-- |     1004 |           3 | 1200.00 | 2024-01-14 |
+-- |     1005 |           5 | 8700.00 | 2024-01-16 |
+-- |     1006 |           4 | 2100.00 | 2024-01-20 |
+-- |     1007 |           2 | 9100.00 | 2024-01-21 |
+-- +----------+-------------+---------+------------+
+-- 7 rows in set (0.00 sec)
+
+-- mysql> select * from orders
+--     -> where amount=(
+--     -> select ^C
+-- mysql> select * from orders
+--     -> where amount>(
+--     -> select avg(amount)
+--     -> from orders
+--     -> );
+-- +----------+-------------+---------+------------+
+-- | order_id | customer_id | amount  | order_date |
+-- +----------+-------------+---------+------------+
+-- |     1002 |           2 | 4500.00 | 2024-01-11 |
+-- |     1005 |           5 | 8700.00 | 2024-01-16 |
+-- |     1007 |           2 | 9100.00 | 2024-01-21 |
+-- +----------+-------------+---------+------------+
+-- 3 rows in set (0.01 sec)
+
+-- mysql> select * from employee
+--     -> where salary=(
+--     -> select avg(salary)
+--     -> from employee
+--     -> );
+-- Empty set (0.00 sec)
+
+-- mysql> select customer_id
+--     -> from orders
+--     -> where select=(
+--     -> select min(amount)
+--     -> from orders
+--     -> );
+-- ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'select=(
+-- select min(amount)
+-- from orders
+-- )' at line 3
+-- mysql> select * from orders
+--     -> where select=(
+--     -> select min(amount)
+--     -> from orders
+--     -> );
+-- ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'select=(
+-- select min(amount)
+-- from orders
+-- )' at line 2
+-- mysql> 
