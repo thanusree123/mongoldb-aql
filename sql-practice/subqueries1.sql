@@ -1,0 +1,367 @@
+-- mysql> select 
+--     -> ^C
+-- mysql> use company
+-- Reading table information for completion of table and column names
+-- You can turn off this feature to get a quicker startup with -A
+
+-- Database changed
+-- mysql> select 
+--     -> c.customer_name,
+--     -> o.amount
+--     -> from customer c
+--     -> join order o
+--     -> on c.customer_id=o.customer_id
+--     -> where o.amount=(
+--     -> select max(amount)
+--     -> from orders
+--     -> );
+-- ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'order o
+-- on c.customer_id=o.customer_id
+-- where o.amount=(
+-- select max(amount)
+-- from ' at line 5
+-- mysql> SELECT
+--     -> c.customer_name,
+--     -> o.amount
+--     -> FROM Customer c
+--     -> JOIN Orders o
+--     -> ON c.customer_id = o.customer_id
+--     -> WHERE o.amount =
+--     -> (
+--     -> SELECT MAX(amount)
+--     -> FROM Orders
+--     -> );
+-- +---------------+---------+
+-- | customer_name | amount  |
+-- +---------------+---------+
+-- | Neha          | 9100.00 |
+-- +---------------+---------+
+-- 1 row in set (0.00 sec)
+
+-- mysql> select
+--     -> c.customer_name,
+--     -> o.order_id,
+--     -> o.amount
+--     -> from customer c
+--     -> join orders o 
+--     -> on c.customer_id=o.customer_id
+--     -> where o.amount=(
+--     -> select max(amount)
+--     -> from orders
+--     -> );
+-- +---------------+----------+---------+
+-- | customer_name | order_id | amount  |
+-- +---------------+----------+---------+
+-- | Neha          |     1007 | 9100.00 |
+-- +---------------+----------+---------+
+-- 1 row in set (0.00 sec)
+
+-- mysql> select 
+--     -> e.emp_name,
+--     -> p.project_name,
+--     -> p.budget
+--     -> from employee e
+--     -> join employee_project ep
+--     -> on e.emp_id=ep.emp_id
+--     -> join project p
+--     -> on ep.project_id=p.project_id
+--     -> where p.budget=(
+--     -> select max(budget)
+--     -> from project
+--     -> );
+-- +----------+--------------+------------+
+-- | emp_name | project_name | budget     |
+-- +----------+--------------+------------+
+-- | Arjun    | AI Chatbot   | 1500000.00 |
+-- | Anjali   | AI Chatbot   | 1500000.00 |
+-- | Divya    | AI Chatbot   | 1500000.00 |
+-- +----------+--------------+------------+
+-- 3 rows in set (0.01 sec)
+
+-- mysql> select 
+--     -> e.emp_name,
+--     -> d.dept_name,
+--     -> e.salary
+--     -> from employee e
+--     -> join department d
+--     -> on e.dept_id=d.dept_id
+--     -> where e.salary>(
+--     -> select avg(salary)
+--     -> from employee
+--     -> );
+-- +----------+-----------+-----------+
+-- | emp_name | dept_name | salary    |
+-- +----------+-----------+-----------+
+-- | Vikram   | Finance   |  95000.00 |
+-- | Suresh   | IT        | 120000.00 |
+-- | Lakshmi  | HR        | 115000.00 |
+-- | Manoj    | Finance   | 130000.00 |
+-- | Ramesh   | Sales     | 125000.00 |
+-- | Sunitha  | Marketing | 118000.00 |
+-- +----------+-----------+-----------+
+-- 6 rows in set (0.00 sec)
+
+-- mysql> select
+--     -> c.customer_name,
+--     -> o.amount
+--     -> from employee e
+--     -> join orders o
+--     -> on c.customer_id=o.customer_id
+--     -> where o.amount>(
+--     -> select avg(amount)
+--     -> from orders
+--     -> );
+-- ERROR 1054 (42S22): Unknown column 'c.customer_name' in 'field list'
+-- mysql> select * from customer;
+-- +-------------+---------------+-----------+
+-- | customer_id | customer_name | city      |
+-- +-------------+---------------+-----------+
+-- |           1 | Amit          | Hyderabad |
+-- |           2 | Neha          | Delhi     |
+-- |           3 | Rohit         | Mumbai    |
+-- |           4 | Pooja         | Chennai   |
+-- |           5 | Kavya         | Bangalore |
+-- |           6 | Akash         | Pune      |
+-- +-------------+---------------+-----------+
+-- 6 rows in set (0.00 sec)
+
+-- mysql> select 
+--     -> c.customer_name,
+--     -> o.amount
+--     -> from customer c 
+--     -> join orders o
+--     -> on c.customer_id=o.customer_id
+--     -> where o.amount>(
+--     -> select avg(amount)
+--     -> from orders
+--     -> );
+-- +---------------+---------+
+-- | customer_name | amount  |
+-- +---------------+---------+
+-- | Neha          | 4500.00 |
+-- | Kavya         | 8700.00 |
+-- | Neha          | 9100.00 |
+-- +---------------+---------+
+-- 3 rows in set (0.01 sec)
+
+-- mysql> select 
+--     -> e.emp_name,
+--     -> d.dept_name
+--     -> from employee e
+--     -> join department d
+--     -> on e.dept_id=d.dept_id
+--     -> where e.dept_id=
+--     -> (
+--     -> select dept_id
+--     -> from employee
+--     -> group by dept
+--     -> ^C
+-- mysql> select 
+--     -> e.emp_name,
+--     -> d.dept_name
+--     -> from employee e
+--     -> join department d
+--     -> on e.dept_id=d.dept_id
+--     -> where e.dept_id=
+--     -> (
+--     -> select dept_id
+--     -> from employee
+--     -> group by dept_id
+--     -> order by avg(salary) desc
+--     -> limit 1
+--     -> );
+-- +----------+-----------+
+-- | emp_name | dept_name |
+-- +----------+-----------+
+-- | Arjun    | Finance   |
+-- | Vikram   | Finance   |
+-- | Manoj    | Finance   |
+-- +----------+-----------+
+-- 3 rows in set (0.00 sec)
+
+-- mysql> select 
+--     -> e.emp_name,
+--     -> d.dept_name,
+--     -> e.salary
+--     -> from employee e
+--     -> joint department d
+--     -> on e.dept_id=d.dept_id
+--     -> where e.salary=
+--     -> (
+--     -> select max(salary)
+--     -> from employee
+--     -> );
+-- ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'joint department d
+-- on e.dept_id=d.dept_id
+-- where e.salary=
+-- (
+-- select max(salary)
+-- f' at line 6
+-- mysql> select  e.emp_name, d.dept_name, e.salary from employee e join department d on e.dept_id=d.dept_id where e.salary= ( select max(salary) from employee );
+-- +----------+-----------+-----------+
+-- | emp_name | dept_name | salary    |
+-- +----------+-----------+-----------+
+-- | Manoj    | Finance   | 130000.00 |
+-- +----------+-----------+-----------+
+-- 1 row in set (0.00 sec)
+
+-- mysql> select 
+--     -> e.emp_name,
+--     -> p.project_name
+--     -> from employee e
+--     -> join project p
+--     -> on e^C
+-- mysql> 
+-- mysql> select 
+--     -> e.emp_name,
+--     -> p.project_name,
+--     -> from employee e
+--     -> join employee_project ep
+--     -> on e.emp_id=ep.emp_id
+--     -> join project p
+--     -> ep.project_id=p.project_id
+--     -> where p.budget=
+--     -> (
+--     -> select min(budget)
+--     -> from project 
+--     -> );
+-- ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from employee e
+-- join employee_project ep
+-- on e.emp_id=ep.emp_id
+-- join project p
+-- ep' at line 4
+-- mysql> SELECT
+--     -> e.emp_name,
+--     -> p.project_name
+--     -> FROM Employee e
+--     -> JOIN Employee_Project ep
+--     -> ON e.emp_id = ep.emp_id
+--     -> JOIN Project p
+--     -> ON ep.project_id = p.project_id
+--     -> WHERE p.budget =
+--     -> (
+--     -> SELECT MIN(budget)
+--     -> FROM Project
+--     -> );
+-- +----------+----------------+
+-- | emp_name | project_name   |
+-- +----------+----------------+
+-- | Rahul    | Payroll System |
+-- | Priya    | Payroll System |
+-- | Meera    | Payroll System |
+-- +----------+----------------+
+-- 3 rows in set (0.00 sec)
+
+-- mysql> select 
+--     -> c.customer_name,
+--     -> o.order_date
+--     -> from customer c
+--     -> join order o
+--     -> on c.customer_id=o.customer_id
+--     -> where o.order_date=(
+--     -> select max(order_date)
+--     -> from orders
+--     -> );
+-- ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'order o
+-- on c.customer_id=o.customer_id
+-- where o.order_date=(
+-- select max(order_dat' at line 5
+-- mysql> select  c.customer_name, o.order_date from customer c join orders o on c.customer_id=o.customer_id where o.order_date=( select max(order_date) from orders );
+-- +---------------+------------+
+-- | customer_name | order_date |
+-- +---------------+------------+
+-- | Neha          | 2024-01-21 |
+-- +---------------+------------+
+-- 1 row in set (0.01 sec)
+
+-- mysql> select 
+--     -> e.employee_name,
+--     -> d.location
+--     -> from employee e
+--     -> join department d
+--     -> on e.dept_id=d.dept_id
+--     -> where d.dept=(
+--     -> select d.dept_id
+--     -> from department 
+--     -> where location ='Bangalore'
+--     -> );
+-- ERROR 1054 (42S22): Unknown column 'e.employee_name' in 'field list'
+-- mysql> select  e.emp_name, d.location from employee e join department d on e.dept_id=d.dept_id where d.dept=( select d.dept_id from department  where location ='Bangalore' );
+-- ERROR 1054 (42S22): Unknown column 'd.dept' in 'where clause'
+-- mysql> select  e.emp_name, d.location from employee e join department d on e.dept_id=d.dept_id where d.dept_id=( select d.dept_id from department  where location ='Bangalore' );
+-- +----------+-----------+
+-- | emp_name | location  |
+-- +----------+-----------+
+-- | Priya    | Hyderabad |
+-- | Meera    | Hyderabad |
+-- | Lakshmi  | Hyderabad |
+-- | Rahul    | Bangalore |
+-- | Sneha    | Bangalore |
+-- | Suresh   | Bangalore |
+-- | Arjun    | Mumbai    |
+-- | Vikram   | Mumbai    |
+-- | Manoj    | Mumbai    |
+-- | Kiran    | Chennai   |
+-- | Ravi     | Chennai   |
+-- | Ramesh   | Chennai   |
+-- | Anjali   | Delhi     |
+-- | Divya    | Delhi     |
+-- | Sunitha  | Delhi     |
+-- +----------+-----------+
+-- 15 rows in set (0.00 sec)
+
+-- mysql> select  e.emp_name, d.location from employee e join department d on e.dept_id=d.dept_id where d.dept_id=( select d.dept_id from department  where location ='Bangalore' );
+-- +----------+-----------+
+-- | emp_name | location  |
+-- +----------+-----------+
+-- | Priya    | Hyderabad |
+-- | Meera    | Hyderabad |
+-- | Lakshmi  | Hyderabad |
+-- | Rahul    | Bangalore |
+-- | Sneha    | Bangalore |
+-- | Suresh   | Bangalore |
+-- | Arjun    | Mumbai    |
+-- | Vikram   | Mumbai    |
+-- | Manoj    | Mumbai    |
+-- | Kiran    | Chennai   |
+-- | Ravi     | Chennai   |
+-- | Ramesh   | Chennai   |
+-- | Anjali   | Delhi     |
+-- | Divya    | Delhi     |
+-- | Sunitha  | Delhi     |
+-- +----------+-----------+
+-- 15 rows in set (0.00 sec)
+
+-- mysql> select 
+--     -> e.emp_name,
+--     -> d.dept_name,
+--     -> e.salary
+--     -> from employee e
+--     -> join department d
+--     -> on e.dept_id=d.dept_id
+--     -> where e.salary=(
+--     -> where e.salary=(^C
+-- mysql> select 
+--     -> e.emp_name,
+--     -> d.dept_name,
+--     -> e.salary
+--     -> from employee e
+--     -> join department d
+--     -> on e.dept_id=d.dept_id
+--     -> where e.salary>(
+--     -> select avg(salary)
+--     -> from employee 
+--     -> where dept_id=e.dept_id
+--     -> );
+-- +----------+-----------+-----------+
+-- | emp_name | dept_name | salary    |
+-- +----------+-----------+-----------+
+-- | Lakshmi  | HR        | 115000.00 |
+-- | Suresh   | IT        | 120000.00 |
+-- | Manoj    | Finance   | 130000.00 |
+-- | Ramesh   | Sales     | 125000.00 |
+-- | Sunitha  | Marketing | 118000.00 |
+-- +----------+-----------+-----------+
+-- 5 rows in set (0.00 sec)
+
+-- mysql> 
