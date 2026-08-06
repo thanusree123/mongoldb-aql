@@ -1,0 +1,281 @@
+-- mysql> use company;
+-- Reading table information for completion of table and column names
+-- You can turn off this feature to get a quicker startup with -A
+
+-- Database changed
+-- mysql> with avgsalary as 
+--     -> (
+--     -> select 
+--     -> dept_id,
+--     -> avg(salary) as avg_salary
+--     -> from employee
+--     -> group by dept_id
+--     -> )
+--     -> select * from 
+--     -> avgsalary
+--     -> where avg_salary>80000;
+-- +---------+---------------+
+-- | dept_id | avg_salary    |
+-- +---------+---------------+
+-- |     103 | 101666.666667 |
+-- |     104 |  86000.000000 |
+-- |     105 |  81000.000000 |
+-- +---------+---------------+
+-- 3 rows in set (0.04 sec)
+
+-- mysql> with departmentaverage as
+--     -> (
+--     -> select 
+--     -> dept_id,
+--     -> avg(salary) as avg_salary
+--     -> from employee
+--     -> group by dept_id
+--     -> )
+--     -> select * from departmentaverage;
+-- +---------+---------------+
+-- | dept_id | avg_salary    |
+-- +---------+---------------+
+-- |     101 |  74000.000000 |
+-- |     102 |  71666.666667 |
+-- |     103 | 101666.666667 |
+-- |     104 |  86000.000000 |
+-- |     105 |  81000.000000 |
+-- +---------+---------------+
+-- 5 rows in set (0.00 sec)
+
+-- mysql> with departmentaverage as 
+--     -> (
+--     -> select 
+--     -> dept_id,
+--     -> avg(salary) as average
+--     -> from employee
+--     -> group by dept_id
+--     -> )
+--     -> select * from departmentaverage
+--     -> where average>80000;
+-- +---------+---------------+
+-- | dept_id | average       |
+-- +---------+---------------+
+-- |     103 | 101666.666667 |
+-- |     104 |  86000.000000 |
+-- |     105 |  81000.000000 |
+-- +---------+---------------+
+-- 3 rows in set (0.00 sec)
+
+-- mysql> with avgsalary as
+--     -> (
+--     -> select 
+--     -> dept_id,
+--     -> avg(salary) as avg_salary
+--     -> from employee
+--     -> group by dept_id
+--     -> )
+--     -> select * from avgsalary;
+-- +---------+---------------+
+-- | dept_id | avg_salary    |
+-- +---------+---------------+
+-- |     101 |  74000.000000 |
+-- |     102 |  71666.666667 |
+-- |     103 | 101666.666667 |
+-- |     104 |  86000.000000 |
+-- |     105 |  81000.000000 |
+-- +---------+---------------+
+-- 5 rows in set (0.00 sec)
+
+-- mysql> with departmentaverage as 
+--     -> (
+--     -> select dept_id,
+--     -> avg(salary) as avg_salary
+--     -> from employee
+--     -> group by dept_id
+--     -> )
+--     -> select 
+--     -> d.dept_name,
+--     -> da.avg_salary
+--     -> from department d
+--     -> join departmentaverage da 
+--     -> on d.dept_id=da.dept_id;
+-- +-----------+---------------+
+-- | dept_name | avg_salary    |
+-- +-----------+---------------+
+-- | HR        |  74000.000000 |
+-- | IT        |  71666.666667 |
+-- | Finance   | 101666.666667 |
+-- | Sales     |  86000.000000 |
+-- | Marketing |  81000.000000 |
+-- +-----------+---------------+
+-- 5 rows in set (0.00 sec)
+
+-- mysql> with avgsalary as 
+--     -> (
+--     -> select 
+--     -> dept_id,
+--     -> avg(salary) as avg_salary
+--     -> from employee
+--     -> group by dept_id
+--     -> );
+-- ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 8
+-- mysql> with avgsalary as  ( select  dept_id, avg(salary) as avg_salary from employee group by dept_id ) select * from avgsalary;
+-- +---------+---------------+
+-- | dept_id | avg_salary    |
+-- +---------+---------------+
+-- |     101 |  74000.000000 |
+-- |     102 |  71666.666667 |
+-- |     103 | 101666.666667 |
+-- |     104 |  86000.000000 |
+-- |     105 |  81000.000000 |
+-- +---------+---------------+
+-- 5 rows in set (0.00 sec)
+
+-- mysql> multi cte
+--     -> ;
+-- ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'multi cte' at line 1
+-- mysql> with 
+--     -> departmentaverage as 
+--     -> (
+--     -> select 
+--     -> dept_id,
+--     -> avg(salary) as avg_salary
+--     -> from employee
+--     -> group by dept_id
+--     -> ),
+--     -> departmentcount as 
+--     -> (
+--     -> select 
+--     -> dept_id,
+--     -> count(*)as total_employee
+--     -> from employee
+--     -> group by dept_id),
+--     -> select 
+--     -> d.dept_name,
+--     -> da.avg_salary,
+--     -> dc.total_employee
+--     -> from department d
+--     -> join departmentaverage da 
+--     -> on d.dept_id=da.dept_id
+--     -> join departmentcount dc
+--     -> on d.dept_id=dc.dept_id;
+-- ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'select 
+-- d.dept_name,
+-- da.avg_salary,
+-- dc.total_employee
+-- from department d
+-- join dep' at line 17
+-- mysql> WITH
+--     -> DepartmentAverage AS
+--     -> (
+--     -> SELECT
+--     -> dept_id,
+--     -> AVG(salary) AS avg_salary
+--     -> FROM Employee
+--     -> GROUP BY dept_id
+--     -> ),
+--     -> 
+--     -> DepartmentCount AS
+--     -> (
+--     -> SELECT
+--     -> dept_id,
+--     -> COUNT(*) AS total_employees
+--     -> FROM Employee
+--     -> GROUP BY dept_id
+--     -> )
+--     -> 
+--     -> SELECT
+--     -> d.dept_name,
+--     -> da.avg_salary,
+--     -> dc.total_employees
+--     -> FROM Department d
+--     -> JOIN DepartmentAverage da
+--     -> ON d.dept_id = da.dept_id
+--     -> JOIN DepartmentCount dc
+--     -> ON d.dept_id = dc.dept_id;
+-- +-----------+---------------+-----------------+
+-- | dept_name | avg_salary    | total_employees |
+-- +-----------+---------------+-----------------+
+-- | HR        |  74000.000000 |               3 |
+-- | IT        |  71666.666667 |               3 |
+-- | Finance   | 101666.666667 |               3 |
+-- | Sales     |  86000.000000 |               3 |
+-- | Marketing |  81000.000000 |               3 |
+-- +-----------+---------------+-----------------+
+-- 5 rows in set (0.01 sec)
+
+-- mysql> WITH
+--     -> 
+--     -> DepartmentAverage AS
+--     -> (
+--     -> SELECT dept_id,
+--     -> AVG(salary) avg_salary
+--     -> FROM Employee
+--     -> GROUP BY dept_id
+--     -> ),
+--     -> 
+--     -> DepartmentTotal AS
+--     -> (
+--     -> SELECT dept_id,
+--     -> SUM(salary) total_salary
+--     -> FROM Employee
+--     -> GROUP BY dept_id
+--     -> ),
+--     -> 
+--     -> DepartmentCount AS
+--     -> (
+--     -> SELECT dept_id,
+--     -> COUNT(*) employees
+--     -> FROM Employee
+--     -> GROUP BY dept_id
+--     -> )
+--     -> 
+--     -> SELECT
+--     -> d.dept_name,
+--     -> da.avg_salary,
+--     -> dt.total_salary,
+--     -> dc.employees
+--     -> FROM Department d
+--     -> JOIN DepartmentAverage da
+--     -> ON d.dept_id=da.dept_id
+--     -> JOIN DepartmentTotal dt
+--     -> ON d.dept_id=dt.dept_id
+--     -> JOIN DepartmentCount dc
+--     -> ON d.dept_id=dc.dept_id;
+-- +-----------+---------------+--------------+-----------+
+-- | dept_name | avg_salary    | total_salary | employees |
+-- +-----------+---------------+--------------+-----------+
+-- | HR        |  74000.000000 |    222000.00 |         3 |
+-- | IT        |  71666.666667 |    215000.00 |         3 |
+-- | Finance   | 101666.666667 |    305000.00 |         3 |
+-- | Sales     |  86000.000000 |    258000.00 |         3 |
+-- | Marketing |  81000.000000 |    243000.00 |         3 |
+-- +-----------+---------------+--------------+-----------+
+-- 5 rows in set (0.01 sec)
+
+-- mysql> WITH
+--     -> 
+--     -> DepartmentAverage AS
+--     -> (
+--     -> SELECT
+--     -> dept_id,
+--     -> AVG(salary) avg_salary
+--     -> FROM Employee
+--     -> GROUP BY dept_id
+--     -> ),
+--     -> 
+--     -> HighSalaryDepartments AS
+--     -> (
+--     -> SELECT *
+--     -> FROM DepartmentAverage
+--     -> WHERE avg_salary > 80000
+--     -> )
+--     -> 
+--     -> SELECT *
+--     -> FROM HighSalaryDepartments;
+-- +---------+---------------+
+-- | dept_id | avg_salary    |
+-- +---------+---------------+
+-- |     103 | 101666.666667 |
+-- |     104 |  86000.000000 |
+-- |     105 |  81000.000000 |
+-- +---------+---------------+
+-- 3 rows in set (0.00 sec)
+
+-- mysql> 
