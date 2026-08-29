@@ -1,0 +1,518 @@
+-- (base) thanu@Thanu-2 ~ % mysql -u root -p
+-- Enter password: 
+-- Welcome to the MySQL monitor.  Commands end with ; or \g.
+-- Your MySQL connection id is 10
+-- Server version: 9.4.0 MySQL Community Server - GPL
+
+-- Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
+
+-- Oracle is a registered trademark of Oracle Corporation and/or its
+-- affiliates. Other names may be trademarks of their respective
+-- owners.
+
+-- Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+-- mysql> create database ofs;
+-- Query OK, 1 row affected (0.03 sec)
+
+-- mysql> CREATE TABLE customers (
+--     ->     customer_id INT PRIMARY KEY,
+--     ->     full_name VARCHAR(100),
+--     ->     email VARCHAR(100),
+--     ->     city VARCHAR(50),
+--     ->     signup_date DATE,
+--     ->     customer_status VARCHAR(20)
+--     -> );
+-- ERROR 1046 (3D000): No database selected
+-- mysql> use ofs;
+-- Database changed
+-- mysql> CREATE TABLE customers (
+--     ->     customer_id INT PRIMARY KEY,
+--     ->     full_name VARCHAR(100),
+--     ->     email VARCHAR(100),
+--     ->     city VARCHAR(50),
+--     ->     signup_date DATE,
+--     ->     customer_status VARCHAR(20)
+--     -> );
+-- Query OK, 0 rows affected (0.02 sec)
+
+-- mysql> CREATE TABLE orders (
+--     ->     order_id INT PRIMARY KEY,
+--     ->     customer_id INT,
+--     ->     order_datetime DATETIME,
+--     ->     product_name VARCHAR(100),
+--     ->     category VARCHAR(50),
+--     ->     quantity INT,
+--     ->     unit_price DECIMAL(10,2),
+--     ->     order_status VARCHAR(20),
+--     -> 
+--     ->     FOREIGN KEY (customer_id)
+--     ->         REFERENCES customers(customer_id)
+--     -> );
+-- Query OK, 0 rows affected (0.02 sec)
+
+-- mysql> INSERT INTO customers
+--     -> (customer_id, full_name, email, city, signup_date, customer_status)
+--     -> VALUES
+--     -> (1, 'Aarav Sharma', 'aarav@gmail.com', 'Hyderabad', '2025-01-15', 'Active'),
+--     -> (2, 'Priya Reddy', 'priya@gmail.com', 'Hyderabad', '2025-02-20', 'Active'),
+--     -> (3, 'Rahul Verma', 'rahul@gmail.com', 'Bengaluru', '2025-03-10', 'Active'),
+--     -> (4, 'Ananya Rao', 'ananya@gmail.com', 'Bengaluru', '2025-04-05', 'Active'),
+--     -> (5, 'Rohan Mehta', 'rohan@gmail.com', 'Pune', '2025-05-12', 'Active'),
+--     -> (6, 'Sneha Patel', 'sneha@gmail.com', 'Pune', '2025-06-18', 'Inactive'),
+--     -> (7, 'Arjun Kumar', 'arjun@gmail.com', 'Hyderabad', '2025-07-01', 'Active'),
+--     -> (8, 'Neha Singh', 'neha@gmail.com', 'Chennai', '2025-07-15', 'Active'),
+--     -> (9, 'Raj Malhotra', 'raj@gmail.com', 'Pune', '2025-08-10', 'Active'),
+--     -> (10, 'Kavya Nair', 'kavya@gmail.com', 'Chennai', '2025-08-25', 'Active'),
+--     -> (11, 'Aditi Kapoor', 'aditi@gmail.com', 'Mumbai', '2025-09-05', 'Active'),
+--     -> (12, 'Vikram Joshi', 'vikram@gmail.com', 'Mumbai', '2025-09-20', 'Inactive'),
+--     -> (13, 'Riya Das', 'riya@gmail.com', 'Hyderabad', '2025-10-10', 'Active'),
+--     -> (14, 'Nisha Gupta', 'nisha@gmail.com', 'Pune', '2025-11-01', 'Active'),
+--     -> (15, 'Aman Khan', 'aman@gmail.com', 'Delhi', '2025-11-15', 'Active');
+-- Query OK, 15 rows affected (0.01 sec)
+-- Records: 15  Duplicates: 0  Warnings: 0
+
+-- mysql> 
+-- mysql> INSERT INTO orders
+--     -> (order_id, customer_id, order_datetime, product_name, category,
+--     ->  quantity, unit_price, order_status)
+--     -> VALUES
+--     -> 
+--     -> -- Aarav Sharma
+--     -> (1, 1, '2026-01-05 10:30:00', 'Wireless Mouse', 'Electronics', 2, 799.00, 'Completed'),
+--     -> (2, 1, '2026-01-15 14:20:00', 'Keyboard', 'Electronics', 1, 1499.00, 'Completed'),
+--     -> (3, 1, '2026-02-10 11:00:00', 'Headphones', 'Electronics', 1, 2499.00, 'Completed'),
+--     -> (4, 1, '2026-02-20 16:45:00', 'USB Cable', 'Accessories', 3, 399.00, 'Pending'),
+--     -> 
+--     -> -- Priya Reddy
+--     -> (5, 2, '2026-01-08 09:15:00', 'Monitor', 'Electronics', 1, 12999.00, 'Completed'),
+--     -> (6, 2, '2026-02-12 13:30:00', 'Mouse Pad', 'Accessories', 2, 499.00, 'Completed'),
+--     -> 
+--     -> -- Rahul Verma
+--     -> (7, 3, '2026-01-10 12:00:00', 'Laptop', 'Electronics', 1, 55000.00, 'Completed'),
+--     -> (8, 3, '2026-01-20 15:30:00', 'Monitor', 'Electronics', 1, 12999.00, 'Completed'),
+--     -> (9, 3, '2026-02-05 10:00:00', 'Keyboard', 'Electronics', 2, 1499.00, 'Completed'),
+--     -> (10, 3, '2026-02-18 17:20:00', 'Headphones', 'Electronics', 1, 2499.00, 'Completed'),
+--     -> (11, 3, '2026-03-01 11:40:00', 'Webcam', 'Electronics', 1, 3999.00, 'Completed'),
+--     -> 
+--     -> -- Ananya Rao
+--     -> (12, 4, '2026-01-12 10:10:00', 'Tablet', 'Electronics', 1, 22000.00, 'Completed'),
+--     -> (13, 4, '2026-02-15 14:00:00', 'Tablet Cover', 'Accessories', 1, 999.00, 'Cancelled'),
+--     -> 
+--     -> -- Rohan Mehta
+--     -> (14, 5, '2026-01-18 09:30:00', 'Smart Watch', 'Electronics', 1, 7999.00, 'Completed'),
+--     -> (15, 5, '2026-02-20 12:10:00', 'Running Shoes', 'Sports', 2, 3499.00, 'Completed'),
+--     -> (16, 5, '2026-03-05 16:00:00', 'Sports Bag', 'Sports', 1, 1999.00, 'Completed'),
+--     -> 
+--     -> -- Sneha Patel
+--     -> (17, 6, '2026-01-22 11:00:00', 'Yoga Mat', 'Sports', 1, 1299.00, 'Completed'),
+--     -> 
+--     -> -- Arjun Kumar
+--     -> (18, 7, '2026-01-25 13:15:00', 'Backpack', 'Accessories', 1, 2499.00, 'Completed'),
+--     -> (19, 7, '2026-02-10 10:30:00', 'Power Bank', 'Electronics', 2, 1999.00, 'Completed'),
+--     -> (20, 7, '2026-03-12 15:45:00', 'USB Cable', 'Accessories', 2, 399.00, 'Completed'),
+--     -> 
+--     -> -- Neha Singh
+--     -> (21, 8, '2026-02-05 09:00:00', 'Camera', 'Electronics', 1, 35000.00, 'Completed'),
+--     -> 
+--     -> -- Raj Malhotra
+--     -> (22, 9, '2026-01-30 14:20:00', 'Gaming Mouse', 'Electronics', 1, 2999.00, 'Completed'),
+--     -> (23, 9, '2026-02-15 16:30:00', 'Gaming Keyboard', 'Electronics', 1, 4999.00, 'Completed'),
+--     -> (24, 9, '2026-03-20 11:15:00', 'Gaming Headset', 'Electronics', 1, 5999.00, 'Completed'),
+--     -> (25, 9, '2026-03-25 18:00:00', 'Mouse Pad', 'Accessories', 1, 799.00, 'Pending'),
+--     -> 
+--     -> -- Kavya Nair
+--     -> (26, 10, '2026-01-05 10:00:00', 'Printer', 'Electronics', 1, 8999.00, 'Completed'),
+--     -> (27, 10, '2026-02-22 13:45:00', 'Ink Cartridge', 'Accessories', 2, 1499.00, 'Completed'),
+--     -> 
+--     -> -- Aditi Kapoor
+--     -> (28, 11, '2026-02-10 12:30:00', 'Desk Lamp', 'Home', 2, 1299.00, 'Completed'),
+--     -> 
+--     -> -- Vikram Joshi
+--     -> (29, 12, '2026-03-05 15:00:00', 'Office Chair', 'Furniture', 1, 8999.00, 'Cancelled'),
+--     -> 
+--     -> -- Riya Das
+--     -> (30, 13, '2026-01-15 11:30:00', 'Smartphone', 'Electronics', 1, 30000.00, 'Completed'),
+--     -> (31, 13, '2026-02-18 14:20:00', 'Phone Case', 'Accessories', 2, 599.00, 'Completed'),
+--     -> 
+--     -> -- Nisha Gupta
+--     -> -- No orders intentionally
+--     -> 
+--     -> -- Aman Khan
+--     -> (32, 15, '2026-03-10 10:15:00', 'Bluetooth Speaker', 'Electronics', 1, 3999.00, 'Completed');
+-- Query OK, 32 rows affected (0.01 sec)
+-- Records: 32  Duplicates: 0  Warnings: 0
+
+-- mysql> select * from customers;
+-- +-------------+--------------+------------------+-----------+-------------+-----------------+
+-- | customer_id | full_name    | email            | city      | signup_date | customer_status |
+-- +-------------+--------------+------------------+-----------+-------------+-----------------+
+-- |           1 | Aarav Sharma | aarav@gmail.com  | Hyderabad | 2025-01-15  | Active          |
+-- |           2 | Priya Reddy  | priya@gmail.com  | Hyderabad | 2025-02-20  | Active          |
+-- |           3 | Rahul Verma  | rahul@gmail.com  | Bengaluru | 2025-03-10  | Active          |
+-- |           4 | Ananya Rao   | ananya@gmail.com | Bengaluru | 2025-04-05  | Active          |
+-- |           5 | Rohan Mehta  | rohan@gmail.com  | Pune      | 2025-05-12  | Active          |
+-- |           6 | Sneha Patel  | sneha@gmail.com  | Pune      | 2025-06-18  | Inactive        |
+-- |           7 | Arjun Kumar  | arjun@gmail.com  | Hyderabad | 2025-07-01  | Active          |
+-- |           8 | Neha Singh   | neha@gmail.com   | Chennai   | 2025-07-15  | Active          |
+-- |           9 | Raj Malhotra | raj@gmail.com    | Pune      | 2025-08-10  | Active          |
+-- |          10 | Kavya Nair   | kavya@gmail.com  | Chennai   | 2025-08-25  | Active          |
+-- |          11 | Aditi Kapoor | aditi@gmail.com  | Mumbai    | 2025-09-05  | Active          |
+-- |          12 | Vikram Joshi | vikram@gmail.com | Mumbai    | 2025-09-20  | Inactive        |
+-- |          13 | Riya Das     | riya@gmail.com   | Hyderabad | 2025-10-10  | Active          |
+-- |          14 | Nisha Gupta  | nisha@gmail.com  | Pune      | 2025-11-01  | Active          |
+-- |          15 | Aman Khan    | aman@gmail.com   | Delhi     | 2025-11-15  | Active          |
+-- +-------------+--------------+------------------+-----------+-------------+-----------------+
+-- 15 rows in set (0.00 sec)
+
+-- mysql> select * from orders;
+-- +----------+-------------+---------------------+-------------------+-------------+----------+------------+--------------+
+-- | order_id | customer_id | order_datetime      | product_name      | category    | quantity | unit_price | order_status |
+-- +----------+-------------+---------------------+-------------------+-------------+----------+------------+--------------+
+-- |        1 |           1 | 2026-01-05 10:30:00 | Wireless Mouse    | Electronics |        2 |     799.00 | Completed    |
+-- |        2 |           1 | 2026-01-15 14:20:00 | Keyboard          | Electronics |        1 |    1499.00 | Completed    |
+-- |        3 |           1 | 2026-02-10 11:00:00 | Headphones        | Electronics |        1 |    2499.00 | Completed    |
+-- |        4 |           1 | 2026-02-20 16:45:00 | USB Cable         | Accessories |        3 |     399.00 | Pending      |
+-- |        5 |           2 | 2026-01-08 09:15:00 | Monitor           | Electronics |        1 |   12999.00 | Completed    |
+-- |        6 |           2 | 2026-02-12 13:30:00 | Mouse Pad         | Accessories |        2 |     499.00 | Completed    |
+-- |        7 |           3 | 2026-01-10 12:00:00 | Laptop            | Electronics |        1 |   55000.00 | Completed    |
+-- |        8 |           3 | 2026-01-20 15:30:00 | Monitor           | Electronics |        1 |   12999.00 | Completed    |
+-- |        9 |           3 | 2026-02-05 10:00:00 | Keyboard          | Electronics |        2 |    1499.00 | Completed    |
+-- |       10 |           3 | 2026-02-18 17:20:00 | Headphones        | Electronics |        1 |    2499.00 | Completed    |
+-- |       11 |           3 | 2026-03-01 11:40:00 | Webcam            | Electronics |        1 |    3999.00 | Completed    |
+-- |       12 |           4 | 2026-01-12 10:10:00 | Tablet            | Electronics |        1 |   22000.00 | Completed    |
+-- |       13 |           4 | 2026-02-15 14:00:00 | Tablet Cover      | Accessories |        1 |     999.00 | Cancelled    |
+-- |       14 |           5 | 2026-01-18 09:30:00 | Smart Watch       | Electronics |        1 |    7999.00 | Completed    |
+-- |       15 |           5 | 2026-02-20 12:10:00 | Running Shoes     | Sports      |        2 |    3499.00 | Completed    |
+-- |       16 |           5 | 2026-03-05 16:00:00 | Sports Bag        | Sports      |        1 |    1999.00 | Completed    |
+-- |       17 |           6 | 2026-01-22 11:00:00 | Yoga Mat          | Sports      |        1 |    1299.00 | Completed    |
+-- |       18 |           7 | 2026-01-25 13:15:00 | Backpack          | Accessories |        1 |    2499.00 | Completed    |
+-- |       19 |           7 | 2026-02-10 10:30:00 | Power Bank        | Electronics |        2 |    1999.00 | Completed    |
+-- |       20 |           7 | 2026-03-12 15:45:00 | USB Cable         | Accessories |        2 |     399.00 | Completed    |
+-- |       21 |           8 | 2026-02-05 09:00:00 | Camera            | Electronics |        1 |   35000.00 | Completed    |
+-- |       22 |           9 | 2026-01-30 14:20:00 | Gaming Mouse      | Electronics |        1 |    2999.00 | Completed    |
+-- |       23 |           9 | 2026-02-15 16:30:00 | Gaming Keyboard   | Electronics |        1 |    4999.00 | Completed    |
+-- |       24 |           9 | 2026-03-20 11:15:00 | Gaming Headset    | Electronics |        1 |    5999.00 | Completed    |
+-- |       25 |           9 | 2026-03-25 18:00:00 | Mouse Pad         | Accessories |        1 |     799.00 | Pending      |
+-- |       26 |          10 | 2026-01-05 10:00:00 | Printer           | Electronics |        1 |    8999.00 | Completed    |
+-- |       27 |          10 | 2026-02-22 13:45:00 | Ink Cartridge     | Accessories |        2 |    1499.00 | Completed    |
+-- |       28 |          11 | 2026-02-10 12:30:00 | Desk Lamp         | Home        |        2 |    1299.00 | Completed    |
+-- |       29 |          12 | 2026-03-05 15:00:00 | Office Chair      | Furniture   |        1 |    8999.00 | Cancelled    |
+-- |       30 |          13 | 2026-01-15 11:30:00 | Smartphone        | Electronics |        1 |   30000.00 | Completed    |
+-- |       31 |          13 | 2026-02-18 14:20:00 | Phone Case        | Accessories |        2 |     599.00 | Completed    |
+-- |       32 |          15 | 2026-03-10 10:15:00 | Bluetooth Speaker | Electronics |        1 |    3999.00 | Completed    |
+-- +----------+-------------+---------------------+-------------------+-------------+----------+------------+--------------+
+-- 32 rows in set (0.01 sec)
+
+-- mysql> select * from customer where customer_status='Active';
+-- ERROR 1146 (42S02): Table 'ofs.customer' doesn't exist
+-- mysql> select * from customers where customer_status='Active';
+-- +-------------+--------------+------------------+-----------+-------------+-----------------+
+-- | customer_id | full_name    | email            | city      | signup_date | customer_status |
+-- +-------------+--------------+------------------+-----------+-------------+-----------------+
+-- |           1 | Aarav Sharma | aarav@gmail.com  | Hyderabad | 2025-01-15  | Active          |
+-- |           2 | Priya Reddy  | priya@gmail.com  | Hyderabad | 2025-02-20  | Active          |
+-- |           3 | Rahul Verma  | rahul@gmail.com  | Bengaluru | 2025-03-10  | Active          |
+-- |           4 | Ananya Rao   | ananya@gmail.com | Bengaluru | 2025-04-05  | Active          |
+-- |           5 | Rohan Mehta  | rohan@gmail.com  | Pune      | 2025-05-12  | Active          |
+-- |           7 | Arjun Kumar  | arjun@gmail.com  | Hyderabad | 2025-07-01  | Active          |
+-- |           8 | Neha Singh   | neha@gmail.com   | Chennai   | 2025-07-15  | Active          |
+-- |           9 | Raj Malhotra | raj@gmail.com    | Pune      | 2025-08-10  | Active          |
+-- |          10 | Kavya Nair   | kavya@gmail.com  | Chennai   | 2025-08-25  | Active          |
+-- |          11 | Aditi Kapoor | aditi@gmail.com  | Mumbai    | 2025-09-05  | Active          |
+-- |          13 | Riya Das     | riya@gmail.com   | Hyderabad | 2025-10-10  | Active          |
+-- |          14 | Nisha Gupta  | nisha@gmail.com  | Pune      | 2025-11-01  | Active          |
+-- |          15 | Aman Khan    | aman@gmail.com   | Delhi     | 2025-11-15  | Active          |
+-- +-------------+--------------+------------------+-----------+-------------+-----------------+
+-- 13 rows in set (0.01 sec)
+
+-- mysql> select order_id,customer_id,product_name,quantity,unit_price
+--     -> from orders where order_staus='Completed';
+-- ERROR 1054 (42S22): Unknown column 'order_staus' in 'where clause'
+-- mysql> select order_id,customer_id,product_name,quantity,unit_price from orders where order_status='Completed';
+-- +----------+-------------+-------------------+----------+------------+
+-- | order_id | customer_id | product_name      | quantity | unit_price |
+-- +----------+-------------+-------------------+----------+------------+
+-- |        1 |           1 | Wireless Mouse    |        2 |     799.00 |
+-- |        2 |           1 | Keyboard          |        1 |    1499.00 |
+-- |        3 |           1 | Headphones        |        1 |    2499.00 |
+-- |        5 |           2 | Monitor           |        1 |   12999.00 |
+-- |        6 |           2 | Mouse Pad         |        2 |     499.00 |
+-- |        7 |           3 | Laptop            |        1 |   55000.00 |
+-- |        8 |           3 | Monitor           |        1 |   12999.00 |
+-- |        9 |           3 | Keyboard          |        2 |    1499.00 |
+-- |       10 |           3 | Headphones        |        1 |    2499.00 |
+-- |       11 |           3 | Webcam            |        1 |    3999.00 |
+-- |       12 |           4 | Tablet            |        1 |   22000.00 |
+-- |       14 |           5 | Smart Watch       |        1 |    7999.00 |
+-- |       15 |           5 | Running Shoes     |        2 |    3499.00 |
+-- |       16 |           5 | Sports Bag        |        1 |    1999.00 |
+-- |       17 |           6 | Yoga Mat          |        1 |    1299.00 |
+-- |       18 |           7 | Backpack          |        1 |    2499.00 |
+-- |       19 |           7 | Power Bank        |        2 |    1999.00 |
+-- |       20 |           7 | USB Cable         |        2 |     399.00 |
+-- |       21 |           8 | Camera            |        1 |   35000.00 |
+-- |       22 |           9 | Gaming Mouse      |        1 |    2999.00 |
+-- |       23 |           9 | Gaming Keyboard   |        1 |    4999.00 |
+-- |       24 |           9 | Gaming Headset    |        1 |    5999.00 |
+-- |       26 |          10 | Printer           |        1 |    8999.00 |
+-- |       27 |          10 | Ink Cartridge     |        2 |    1499.00 |
+-- |       28 |          11 | Desk Lamp         |        2 |    1299.00 |
+-- |       30 |          13 | Smartphone        |        1 |   30000.00 |
+-- |       31 |          13 | Phone Case        |        2 |     599.00 |
+-- |       32 |          15 | Bluetooth Speaker |        1 |    3999.00 |
+-- +----------+-------------+-------------------+----------+------------+
+-- 28 rows in set (0.00 sec)
+
+-- mysql> select customer_id,count(order_id) as total_completed_orders 
+--     -> from orders 
+--     -> group by customer_id;
+-- +-------------+------------------------+
+-- | customer_id | total_completed_orders |
+-- +-------------+------------------------+
+-- |           1 |                      4 |
+-- |           2 |                      2 |
+-- |           3 |                      5 |
+-- |           4 |                      2 |
+-- |           5 |                      3 |
+-- |           6 |                      1 |
+-- |           7 |                      3 |
+-- |           8 |                      1 |
+-- |           9 |                      4 |
+-- |          10 |                      2 |
+-- |          11 |                      1 |
+-- |          12 |                      1 |
+-- |          13 |                      2 |
+-- |          15 |                      1 |
+-- +-------------+------------------------+
+-- 14 rows in set (0.00 sec)
+
+-- mysql> select customer_id,count(order_id) as total_completed_orders  from orders where order_status='completed' group by customer_id;
+-- +-------------+------------------------+
+-- | customer_id | total_completed_orders |
+-- +-------------+------------------------+
+-- |           1 |                      3 |
+-- |           2 |                      2 |
+-- |           3 |                      5 |
+-- |           4 |                      1 |
+-- |           5 |                      3 |
+-- |           6 |                      1 |
+-- |           7 |                      3 |
+-- |           8 |                      1 |
+-- |           9 |                      3 |
+-- |          10 |                      2 |
+-- |          11 |                      1 |
+-- |          13 |                      2 |
+-- |          15 |                      1 |
+-- +-------------+------------------------+
+-- 13 rows in set (0.00 sec)
+
+-- mysql> select customer_id,sum(quantity*unit_price) as total_spent from orders 
+--     -> group by customer_id;
+-- +-------------+-------------+
+-- | customer_id | total_spent |
+-- +-------------+-------------+
+-- |           1 |     6793.00 |
+-- |           2 |    13997.00 |
+-- |           3 |    77495.00 |
+-- |           4 |    22999.00 |
+-- |           5 |    16996.00 |
+-- |           6 |     1299.00 |
+-- |           7 |     7295.00 |
+-- |           8 |    35000.00 |
+-- |           9 |    14796.00 |
+-- |          10 |    11997.00 |
+-- |          11 |     2598.00 |
+-- |          12 |     8999.00 |
+-- |          13 |    31198.00 |
+-- |          15 |     3999.00 |
+-- +-------------+-------------+
+-- 14 rows in set (0.00 sec)
+
+-- mysql> select customer_id,sum(quantity*unit_price) as total_spent from orders where order_status='completed' group by customer_id;
+-- +-------------+-------------+
+-- | customer_id | total_spent |
+-- +-------------+-------------+
+-- |           1 |     5596.00 |
+-- |           2 |    13997.00 |
+-- |           3 |    77495.00 |
+-- |           4 |    22000.00 |
+-- |           5 |    16996.00 |
+-- |           6 |     1299.00 |
+-- |           7 |     7295.00 |
+-- |           8 |    35000.00 |
+-- |           9 |    13997.00 |
+-- |          10 |    11997.00 |
+-- |          11 |     2598.00 |
+-- |          13 |    31198.00 |
+-- |          15 |     3999.00 |
+-- +-------------+-------------+
+-- 13 rows in set (0.01 sec)
+
+-- mysql> select customer_id,sum(quantity*unit_price) as total_spent from orders where order_status='completed';
+-- ERROR 1140 (42000): In aggregated query without GROUP BY, expression #1 of SELECT list contains nonaggregated column 'ofs.orders.customer_id'; this is incompatible with sql_mode=only_full_group_by
+-- mysql> select customer_id,sum(quantity*unit_price) as total_spent from orders where order_status='completed' group by customer_id;
+-- +-------------+-------------+
+-- | customer_id | total_spent |
+-- +-------------+-------------+
+-- |           1 |     5596.00 |
+-- |           2 |    13997.00 |
+-- |           3 |    77495.00 |
+-- |           4 |    22000.00 |
+-- |           5 |    16996.00 |
+-- |           6 |     1299.00 |
+-- |           7 |     7295.00 |
+-- |           8 |    35000.00 |
+-- |           9 |    13997.00 |
+-- |          10 |    11997.00 |
+-- |          11 |     2598.00 |
+-- |          13 |    31198.00 |
+-- |          15 |     3999.00 |
+-- +-------------+-------------+
+-- 13 rows in set (0.00 sec)
+
+-- mysql> select customer_id,count(order_id) where order_status='completed'
+--     -> ^C
+-- mysql> select customer_id,count(order_id) as total_completed_orders  where order_status='completed' 
+--     -> having total_completed_orders>3 group by customer_id;
+-- ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'group by customer_id' at line 2
+-- mysql> select customer_id,count(order_id) as total_completed_orders  where order_status='completed'group by customer_id  having total_completed_orders>3;
+-- ERROR 1054 (42S22): Unknown column 'customer_id' in 'field list'
+-- mysql> select customer_id,count(order_id) as total_completed_orders from orders where order_status='completed'
+--     -> group by customer_id
+--     -> having count(order_id)>3;
+-- +-------------+------------------------+
+-- | customer_id | total_completed_orders |
+-- +-------------+------------------------+
+-- |           3 |                      5 |
+-- +-------------+------------------------+
+-- 1 row in set (0.00 sec)
+
+-- mysql> select o.order_id,c.full_name,c.city,p.product_name,o.quantity,o.unit_price from customers c
+--     -> inner join orders o
+--     -> on c.cutomer_id=o.customer_id
+--     -> where o.order_status='completed';
+-- ERROR 1054 (42S22): Unknown column 'p.product_name' in 'field list'
+-- mysql> select o.order_id,c.full_name,c.city,o.product_name,o.quantity,o.unit_price from customers c inner join orders o on c.cutomer_id=o.customer_id where o.order_status='completed';
+-- ERROR 1054 (42S22): Unknown column 'c.cutomer_id' in 'on clause'
+-- mysql> select o.order_id,c.full_name,c.city,o.product_name,o.quantity,o.unit_price from customers c inner join orders o on c.customer_id=o.customer_id where o.order_status='completed';
+-- +----------+--------------+-----------+-------------------+----------+------------+
+-- | order_id | full_name    | city      | product_name      | quantity | unit_price |
+-- +----------+--------------+-----------+-------------------+----------+------------+
+-- |        1 | Aarav Sharma | Hyderabad | Wireless Mouse    |        2 |     799.00 |
+-- |        2 | Aarav Sharma | Hyderabad | Keyboard          |        1 |    1499.00 |
+-- |        3 | Aarav Sharma | Hyderabad | Headphones        |        1 |    2499.00 |
+-- |        5 | Priya Reddy  | Hyderabad | Monitor           |        1 |   12999.00 |
+-- |        6 | Priya Reddy  | Hyderabad | Mouse Pad         |        2 |     499.00 |
+-- |        7 | Rahul Verma  | Bengaluru | Laptop            |        1 |   55000.00 |
+-- |        8 | Rahul Verma  | Bengaluru | Monitor           |        1 |   12999.00 |
+-- |        9 | Rahul Verma  | Bengaluru | Keyboard          |        2 |    1499.00 |
+-- |       10 | Rahul Verma  | Bengaluru | Headphones        |        1 |    2499.00 |
+-- |       11 | Rahul Verma  | Bengaluru | Webcam            |        1 |    3999.00 |
+-- |       12 | Ananya Rao   | Bengaluru | Tablet            |        1 |   22000.00 |
+-- |       14 | Rohan Mehta  | Pune      | Smart Watch       |        1 |    7999.00 |
+-- |       15 | Rohan Mehta  | Pune      | Running Shoes     |        2 |    3499.00 |
+-- |       16 | Rohan Mehta  | Pune      | Sports Bag        |        1 |    1999.00 |
+-- |       17 | Sneha Patel  | Pune      | Yoga Mat          |        1 |    1299.00 |
+-- |       18 | Arjun Kumar  | Hyderabad | Backpack          |        1 |    2499.00 |
+-- |       19 | Arjun Kumar  | Hyderabad | Power Bank        |        2 |    1999.00 |
+-- |       20 | Arjun Kumar  | Hyderabad | USB Cable         |        2 |     399.00 |
+-- |       21 | Neha Singh   | Chennai   | Camera            |        1 |   35000.00 |
+-- |       22 | Raj Malhotra | Pune      | Gaming Mouse      |        1 |    2999.00 |
+-- |       23 | Raj Malhotra | Pune      | Gaming Keyboard   |        1 |    4999.00 |
+-- |       24 | Raj Malhotra | Pune      | Gaming Headset    |        1 |    5999.00 |
+-- |       26 | Kavya Nair   | Chennai   | Printer           |        1 |    8999.00 |
+-- |       27 | Kavya Nair   | Chennai   | Ink Cartridge     |        2 |    1499.00 |
+-- |       28 | Aditi Kapoor | Mumbai    | Desk Lamp         |        2 |    1299.00 |
+-- |       30 | Riya Das     | Hyderabad | Smartphone        |        1 |   30000.00 |
+-- |       31 | Riya Das     | Hyderabad | Phone Case        |        2 |     599.00 |
+-- |       32 | Aman Khan    | Delhi     | Bluetooth Speaker |        1 |    3999.00 |
+-- +----------+--------------+-----------+-------------------+----------+------------+
+-- 28 rows in set (0.00 sec)
+
+-- mysql> select c.customer_id,c.full_name,c.city from customers c inner join orders o on c.customer_id=o.customer_id where o.order_id is null;
+-- Empty set (0.00 sec)
+
+-- mysql> select c.customer_id,c.full_name,c.city from customers c left join orders o on c.customer_id=o.customer_id where o.order_id is null;
+-- +-------------+-------------+------+
+-- | customer_id | full_name   | city |
+-- +-------------+-------------+------+
+-- |          14 | Nisha Gupta | Pune |
+-- +-------------+-------------+------+
+-- 1 row in set (0.01 sec)
+
+-- mysql> select c.customer_id,c.full_name,sum(o.quantity*o.unit_price)as total_spent from customers c inner join orders o
+--     -> on c.customer_id=o.customer_id
+--     -> where o.order_status='Completed'
+--     -> group by c.customer_id,c.full_name;
+-- +-------------+--------------+-------------+
+-- | customer_id | full_name    | total_spent |
+-- +-------------+--------------+-------------+
+-- |           1 | Aarav Sharma |     5596.00 |
+-- |           2 | Priya Reddy  |    13997.00 |
+-- |           3 | Rahul Verma  |    77495.00 |
+-- |           4 | Ananya Rao   |    22000.00 |
+-- |           5 | Rohan Mehta  |    16996.00 |
+-- |           6 | Sneha Patel  |     1299.00 |
+-- |           7 | Arjun Kumar  |     7295.00 |
+-- |           8 | Neha Singh   |    35000.00 |
+-- |           9 | Raj Malhotra |    13997.00 |
+-- |          10 | Kavya Nair   |    11997.00 |
+-- |          11 | Aditi Kapoor |     2598.00 |
+-- |          13 | Riya Das     |    31198.00 |
+-- |          15 | Aman Khan    |     3999.00 |
+-- +-------------+--------------+-------------+
+-- 13 rows in set (0.01 sec)
+
+-- mysql> select c.customer_id,c.full_name,sum(o.quantity*o.unit_price)as total_spent from customers c inner join orders o on c.customer_id=o.customer_id where o.order_status='Completed' group by c.customer_id,c.full_name order by total_spent desc;
+-- +-------------+--------------+-------------+
+-- | customer_id | full_name    | total_spent |
+-- +-------------+--------------+-------------+
+-- |           3 | Rahul Verma  |    77495.00 |
+-- |           8 | Neha Singh   |    35000.00 |
+-- |          13 | Riya Das     |    31198.00 |
+-- |           4 | Ananya Rao   |    22000.00 |
+-- |           5 | Rohan Mehta  |    16996.00 |
+-- |           2 | Priya Reddy  |    13997.00 |
+-- |           9 | Raj Malhotra |    13997.00 |
+-- |          10 | Kavya Nair   |    11997.00 |
+-- |           7 | Arjun Kumar  |     7295.00 |
+-- |           1 | Aarav Sharma |     5596.00 |
+-- |          15 | Aman Khan    |     3999.00 |
+-- |          11 | Aditi Kapoor |     2598.00 |
+-- |           6 | Sneha Patel  |     1299.00 |
+-- +-------------+--------------+-------------+
+-- 13 rows in set (0.01 sec)
+
+-- mysql> select order_id,product_name,unit_price from orders where order_status='Completed'
+--     -> and unit_price>(select avg(unit_price) from orders where order_status='Completed');
+-- +----------+--------------+------------+
+-- | order_id | product_name | unit_price |
+-- +----------+--------------+------------+
+-- |        5 | Monitor      |   12999.00 |
+-- |        7 | Laptop       |   55000.00 |
+-- |        8 | Monitor      |   12999.00 |
+-- |       12 | Tablet       |   22000.00 |
+-- |       21 | Camera       |   35000.00 |
+-- |       26 | Printer      |    8999.00 |
+-- |       30 | Smartphone   |   30000.00 |
+-- +----------+--------------+------------+
+-- 7 rows in set (0.01 sec)
+
+-- mysql> select c.customer_id,c.full_name,sum(quantity*unit_price) as total_spent 
+--     -> from customer c inner join orders o 
+--     -> on c.customer_id=o.customer_id
+--     -> where o.order_status='Completed'
+--     -> group by sum(quantity*unit_price) as total desc
+--     -> and total_spent>(
+--     -> select avg(total_spend) from orders ^C
+-- mysql> select 
+--     -> c.customer_id,
+--     -> c.full_name,
+--     -> sum(o.quantiy*o.unit_price) as total_spent
+--     -> from customers c inner join orders o
+--     -> on c.customer_id=o.customer_id
+--     -> where o.order_status='Completed'
+--     -> group by c.customer_id,c.full_name
+--     -> having sum(o.quantity*o.unit_price)>(
+--     -> select avg
