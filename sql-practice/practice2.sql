@@ -169,3 +169,346 @@
 -- 13 rows in set (0.00 sec)
 
 -- mysql> 
+
+-- Database changed
+-- mysql> select 
+--     -> c.customer_id,
+--     -> c.full_name,
+--     -> sum(o.quantity*o.unit_price) as total_spent
+--     -> from customers c inner join orders o 
+--     -> on c.customer_id=o.customer_id 
+--     -> where order_status='Completed'
+--     -> group by c.customer_id,c.full_name
+--     -> order by sum(o.quantity*o.unit_price) as total_spent desc
+--     -> having sum(o.quantity*o.unit_price)>(
+--     -> select avg(total_spent)
+--     -> from (
+--     -> select customer_id,
+--     -> full_name,
+--     -> sum(quantity*unit_price) as total_spent
+--     -> from orders
+--     -> where order_status='Completed'
+--     -> group by customer_id
+--     -> ) as customer_sum
+--     -> );
+-- ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'as total_spent desc
+-- having sum(o.quantity*o.unit_price)>(
+-- select avg(total_spent' at line 9
+-- mysql> SELECT 
+--     ->     c.customer_id,
+--     ->     c.full_name,
+--     ->     SUM(o.quantity * o.unit_price) AS total_spent
+--     -> FROM customers c
+--     -> INNER JOIN orders o
+--     ->     ON c.customer_id = o.customer_id
+--     -> WHERE o.order_status = 'Completed'
+--     -> GROUP BY c.customer_id, c.full_name
+--     -> HAVING SUM(o.quantity * o.unit_price) > (
+--     ->     SELECT AVG(total_spent)
+--     ->     FROM (
+--     ->         SELECT 
+--     ->             customer_id,
+--     ->             SUM(quantity * unit_price) AS total_spent
+--     ->         FROM orders
+--     ->         WHERE order_status = 'Completed'
+--     ->         GROUP BY customer_id
+--     ->     ) AS customer_sum
+--     -> )
+--     -> ORDER BY total_spent DESC;
+-- +-------------+-------------+-------------+
+-- | customer_id | full_name   | total_spent |
+-- +-------------+-------------+-------------+
+-- |           3 | Rahul Verma |    77495.00 |
+-- |           8 | Neha Singh  |    35000.00 |
+-- |          13 | Riya Das    |    31198.00 |
+-- |           4 | Ananya Rao  |    22000.00 |
+-- +-------------+-------------+-------------+
+-- 4 rows in set (0.00 sec)
+
+-- mysql> SELECT AVG(total_spent)
+--     -> FROM (
+--     ->     SELECT 
+--     ->         customer_id,
+--     ->         SUM(quantity * unit_price) AS total_spent
+--     ->     FROM orders
+--     ->     WHERE order_status = 'Completed'
+--     ->     GROUP BY customer_id
+--     -> ) AS customer_sum;
+-- +------------------+
+-- | AVG(total_spent) |
+-- +------------------+
+-- |     18728.230769 |
+-- +------------------+
+-- 1 row in set (0.00 sec)
+
+-- mysql> SELECT AVG(total_spent)as average_spending  FROM (     SELECT          customer_id,         SUM(quantity * unit_price) AS total_spent     FROM orders     WHERE order_status = 'Completed'     GROU
+-- P BY customer_id ) AS customer_sum;
+-- +------------------+
+-- | average_spending |
+-- +------------------+
+-- |     18728.230769 |
+-- +------------------+
+-- 1 row in set (0.00 sec)
+
+-- mysql> select avg(total_spent)
+--     -> from (
+--     -> select 
+--     -> customer_id,
+--     -> sum(quantity*unit_price)
+--     -> from orders 
+--     -> where order_status='Completed'
+--     -> group by customer_id
+--     -> );
+-- ERROR 1248 (42000): Every derived table must have its own alias
+-- mysql> select avg(completed_orders) as average_completed_order
+--     -> from (
+--     -> select 
+--     -> customer_id,
+--     -> count(order_is) as completed_order
+--     -> from orders 
+--     -> where order_status='Completed'
+--     -> group by customer_id
+--     -> ) as customer_count;
+-- ERROR 1054 (42S22): Unknown column 'order_is' in 'field list'
+-- mysql> select avg(completed_orders) as average_completed_order from ( select  customer_id, count(order_id) as completed_order from orders  where order_status='Completed' group by customer_id ) as customer_count;
+-- ERROR 1054 (42S22): Unknown column 'completed_orders' in 'field list'
+-- mysql> select avg(completed_order) as average_completed_order
+--     -> from(
+--     -> select customer_id,
+--     -> count(order_id) as completed_order
+--     -> from orders
+--     -> where order_status='Completed'
+--     -> group by customer_id
+--     -> ) as customer_count;
+-- +-------------------------+
+-- | average_completed_order |
+-- +-------------------------+
+-- |                  2.1538 |
+-- +-------------------------+
+-- 1 row in set (0.01 sec)
+
+-- mysql> select avg(highest_order_value)as average_highest_value
+--     -> from(
+--     -> select customer_id,
+--     -> max(quantity*unit_price) as highest_order_value
+--     -> from orders 
+--     -> where order_status='Completed'
+--     -> group by customer_id
+--     -> ) as customer_max;
+-- +-----------------------+
+-- | average_highest_value |
+-- +-----------------------+
+-- |          14799.153846 |
+-- +-----------------------+
+-- 1 row in set (0.00 sec)
+
+-- mysql> select avg(minimum_order_value) as avg_min_value
+--     -> from(
+--     -> select customer_id,
+--     -> min(quantity*unit_price) as minimum_order_value
+--     -> from orders 
+--     -> where order_status='Completed'
+--     -> group by customer_id
+--     -> )as customer_min;
+-- +---------------+
+-- | avg_min_value |
+-- +---------------+
+-- |   6144.923077 |
+-- +---------------+
+-- 1 row in set (0.01 sec)
+
+-- mysql> select customer_id,
+--     -> sum(quantity*unit_price) as total_spent
+--     -> from orders 
+--     -> select avg(total_spending)
+--     -> from (
+--     -> select customer_id,
+--     -> sum(quantity*unit_price)as total_spending 
+--     -> where order_status='Completed'
+--     -> group by customer_id
+--     -> ) as total_spending;
+-- ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'select avg(total_spending)
+-- from (
+-- select customer_id,
+-- sum(quantity*unit_price)as' at line 4
+-- mysql> select 
+--     -> customer_id,
+--     -> total_spending
+--     -> from(
+--     -> select 
+--     -> customer_id,
+--     -> sum(quantity*unit_price) as total_spending
+--     -> from orders 
+--     -> where order_status='Completed'
+--     -> group by customer_id
+--     -> ) as customer_spending
+--     -> where total_spending>(
+--     -> select avg(total_spending)
+--     -> from (
+--     -> select customer_id,sum(quantity*unit_price) as total_spending
+--     -> from orders
+--     -> where order_status='Completed'
+--     -> group by customer_id
+--     -> ) as avg_spending
+--     -> );
+-- +-------------+----------------+
+-- | customer_id | total_spending |
+-- +-------------+----------------+
+-- |           3 |       77495.00 |
+-- |           4 |       22000.00 |
+-- |           8 |       35000.00 |
+-- |          13 |       31198.00 |
+-- +-------------+----------------+
+-- 4 rows in set (0.00 sec)
+
+-- mysql> select 
+--     -> ^C
+--     -> 
+-- zsh: suspended  mysql -u root -p
+-- (base) thanu@Thanu-2 ~ % mysql -u root -p
+-- Enter password: 
+-- Welcome to the MySQL monitor.  Commands end with ; or \g.
+-- Your MySQL connection id is 14
+-- Server version: 9.4.0 MySQL Community Server - GPL
+
+-- Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
+
+-- Oracle is a registered trademark of Oracle Corporation and/or its
+-- affiliates. Other names may be trademarks of their respective
+-- owners.
+
+-- Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+-- mysql> use ofs;
+-- Reading table information for completion of table and column names
+-- You can turn off this feature to get a quicker startup with -A
+
+-- Database changed
+-- mysql> select avg(max_total_spending)
+--     -> from(
+--     -> select category,
+--     -> max(quantity*unit_price) as max_total_spending
+--     -> from orders 
+--     -> where order_status='Completed'
+--     -> group by category
+--     -> ) as avg_max_spending;
+-- +-------------------------+
+-- | avg(max_total_spending) |
+-- +-------------------------+
+-- |            16898.500000 |
+-- +-------------------------+
+-- 1 row in set (0.00 sec)
+
+-- mysql> select avg(max_total_spending) as avg highest category value from( select category, max(quantity*unit_price) as max_total_spending from orders  where order_status='Completed' group by category )
+-- as avg_max_spending;
+-- ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'highest category value from( select category, max(quantity*unit_price) as max_to' at line 1
+-- mysql> select avg(max_total_spending) as avg highest category value from( select category, max(quantity*unit_price) as max_total_spending from orders  where order_status='Completed' group by category )
+--     -> as avg_max_spending;
+-- ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'highest category value from( select category, max(quantity*unit_price) as max_to' at line 1
+-- mysql> select avg(max_total_spending) as avg_highest_category_value from( select category, max(quantity*unit_price) as max_total_spending from orders  where order_status='Completed' group by category )
+-- as avg_max_spending;
+-- +----------------------------+
+-- | avg_highest_category_value |
+-- +----------------------------+
+-- |               16898.500000 |
+-- +----------------------------+
+-- 1 row in set (0.00 sec)
+
+-- mysql> select avg(min_value_spending) as average_lowest_category_value
+--     -> from(
+--     -> select
+--     -> category,
+--     -> min(quantity*unit_price) as min_value_spending
+--     -> from orders 
+--     -> where order_status='Completed'
+--     -> group by category
+--     -> ) as min_value;
+-- +-------------------------------+
+-- | average_lowest_category_value |
+-- +-------------------------------+
+-- |                   1548.500000 |
+-- +-------------------------------+
+-- 1 row in set (0.00 sec)
+
+-- mysql> select 
+--     -> customer_id,
+--     -> total_spend
+--     -> select customer_id,
+--     -> sum(quantity*unit_order) as total_spent
+--     -> where order_status='Completed'
+--     -> group by customer_id^C
+-- mysql> select 
+--     -> customer_id,
+--     -> total_spent
+--     -> from(
+--     -> select 
+--     -> customer_id,
+--     -> sum(quantity*unit_price) as total_price
+--     -> from orders 
+--     -> where order_status='Completed'
+--     -> group by customer_id
+--     -> ) as total_spending
+--     -> where max(total_price)=(
+--     -> ^C
+-- mysql> select 
+--     -> customer_id,
+--     -> total_spent
+--     -> from(
+--     -> select 
+--     -> customer_id,
+--     -> sum(quantity*unit_price) as total_spend
+--     -> where order_status='Completed'
+--     -> ^C
+-- mysql> select 
+--     -> customer_id,
+--     -> total_spent
+--     -> from(
+--     -> select customer_id,
+--     -> sum(quantity*unit_price) as total_spent
+--     -> from orders 
+--     -> where order_status='Completed'
+--     -> group by customer_id
+--     -> ) as total_spending
+--     -> where total_spend=(
+--     -> select max(total_spend)
+--     -> from(
+--     -> select 
+--     -> customer_id,
+--     -> sum(quantity*unit_price) as total_spend
+--     -> from orders 
+--     -> where order_status='Completed'
+--     -> group by customer_id
+--     -> ) as max 
+--     -> );
+-- ERROR 1054 (42S22): Unknown column 'total_spend' in 'where clause'
+-- mysql> SELECT 
+--     ->     customer_id,
+--     ->     total_spent
+--     -> FROM (
+--     ->     SELECT 
+--     ->         customer_id,
+--     ->         SUM(quantity * unit_price) AS total_spent
+--     ->     FROM orders
+--     ->     WHERE order_status = 'Completed'
+--     ->     GROUP BY customer_id
+--     -> ) AS total_spending
+--     -> WHERE total_spent = (
+--     ->     SELECT MAX(total_spent)
+--     ->     FROM (
+--     ->         SELECT 
+--     ->             customer_id,
+--     ->             SUM(quantity * unit_price) AS total_spent
+--     ->         FROM orders
+--     ->         WHERE order_status = 'Completed'
+--     ->         GROUP BY customer_id
+--     ->     ) AS max_spending
+--     -> );
+-- +-------------+-------------+
+-- | customer_id | total_spent |
+-- +-------------+-------------+
+-- |           3 |    77495.00 |
+-- +-------------+-------------+
+-- 1 row in set (0.00 sec)
+
+-- mysql> 
+
