@@ -1,0 +1,171 @@
+-- mysql> use ofs;
+-- Reading table information for completion of table and column names
+-- You can turn off this feature to get a quicker startup with -A
+
+-- Database changed
+-- mysql> select c.customer_id,c.full_name,count(o.order_id) as total_completed_id  from customers c inner join orders o  on c.customer_id=o.customer_id where o.order_status='Completed' and count(o.order_id)>( select avg(order_id)  from orders where order_status='Completed');
+-- ERROR 1111 (HY000): Invalid use of group function
+-- mysql> select c.customer_id,
+--     -> c.full_name,
+--     -> count(o.order_id) as total_completed_orders 
+--     -> from customers c inner join orders o
+--     -> on c.customer_id=o.customer_id
+--     -> where order_status='Completed'
+--     -> select avg(total_completed_orders)
+--     -> from(
+--     -> select customer_id,
+--     -> count(order_id) as total_customer_orders
+--     -> from orders
+--     -> where order_Status='Completed'
+--     -> group by customer_id
+--     -> )as customer_counts
+--     -> ;
+-- ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'select avg(total_completed_orders)
+-- from(
+-- select customer_id,
+-- count(order_id) as ' at line 7
+-- mysql> SELECT 
+--     ->     c.customer_id,
+--     ->     c.full_name,
+--     ->     COUNT(o.order_id) AS total_completed_orders
+--     -> FROM customers c
+--     -> INNER JOIN orders o
+--     ->     ON c.customer_id = o.customer_id
+--     -> WHERE o.order_status = 'Completed'
+--     -> GROUP BY c.customer_id, c.full_name
+--     -> HAVING COUNT(o.order_id) > (
+--     ->     SELECT AVG(total_customer_orders)
+--     ->     FROM (
+--     ->         SELECT 
+--     ->             customer_id,
+--     ->             COUNT(order_id) AS total_customer_orders
+--     ->         FROM orders
+--     ->         WHERE order_status = 'Completed'
+--     ->         GROUP BY customer_id
+--     ->     ) AS customer_counts
+--     -> );
+-- +-------------+--------------+------------------------+
+-- | customer_id | full_name    | total_completed_orders |
+-- +-------------+--------------+------------------------+
+-- |           1 | Aarav Sharma |                      3 |
+-- |           3 | Rahul Verma  |                      5 |
+-- |           5 | Rohan Mehta  |                      3 |
+-- |           7 | Arjun Kumar  |                      3 |
+-- |           9 | Raj Malhotra |                      3 |
+-- +-------------+--------------+------------------------+
+-- 5 rows in set (0.04 sec)
+
+-- mysql> select c. customer_id,c.full_name,c.city
+--     -> from customers c
+--     -> where Exists (
+--     -> select 1
+--     -> from orders o
+--     -> where c.customer_id=o.customer_id
+--     -> and o.order_status='Completed' and o.product_name='Electronics'
+--     -> ),
+--     -> where not exists(
+--     -> select 1
+--     -> from orders o 
+--     -> where c.customer_id=o.customer_id
+--     -> and o.product_name='Book'
+--     -> );
+-- ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',
+-- where not exists(
+-- select 1
+-- from orders o 
+-- where c.customer_id=o.customer_id
+-- an' at line 8
+-- mysql> SELECT 
+--     ->     c.customer_id,
+--     ->     c.full_name,
+--     ->     c.city
+--     -> FROM customers c
+--     -> WHERE EXISTS (
+--     ->     SELECT 1
+--     ->     FROM orders o
+--     ->     WHERE c.customer_id = o.customer_id
+--     ->       AND o.order_status = 'Completed'
+--     ->       AND o.category = 'Electronics'
+--     -> )
+--     -> AND NOT EXISTS (
+--     ->     SELECT 1
+--     ->     FROM orders o
+--     ->     WHERE c.customer_id = o.customer_id
+--     ->       AND o.order_status = 'Completed'
+--     ->       AND o.category = 'Book'
+--     -> );
+-- +-------------+--------------+-----------+
+-- | customer_id | full_name    | city      |
+-- +-------------+--------------+-----------+
+-- |           1 | Aarav Sharma | Hyderabad |
+-- |           2 | Priya Reddy  | Hyderabad |
+-- |           3 | Rahul Verma  | Bengaluru |
+-- |           4 | Ananya Rao   | Bengaluru |
+-- |           5 | Rohan Mehta  | Pune      |
+-- |           7 | Arjun Kumar  | Hyderabad |
+-- |           8 | Neha Singh   | Chennai   |
+-- |           9 | Raj Malhotra | Pune      |
+-- |          10 | Kavya Nair   | Chennai   |
+-- |          13 | Riya Das     | Hyderabad |
+-- |          15 | Aman Khan    | Delhi     |
+-- +-------------+--------------+-----------+
+-- 11 rows in set (0.01 sec)
+
+-- mysql> select 
+--     -> c.customer_id,
+--     -> c.full_name,
+--     -> o.order_id,
+--     -> p.product_name,
+--     -> o.order_value
+--     -> from customers c inner join orders o
+--     -> on c.customer_id=o.customer_id
+--     -> where order_status='Completed'
+--     -> where (o.quantity*o.unit_price)=
+--     -> select max(o2.quantity*o2.unit_price)
+--     -> from orders o2
+--     -> where o2.customer_id=o.customer_id
+--     -> and o2.order_status='Completed'
+--     -> );
+-- ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where (o.quantity*o.unit_price)=
+-- select max(o2.quantity*o2.unit_price)
+-- from orde' at line 10
+-- mysql> select  c.customer_id, c.full_name, o.order_id, p.product_name, o.order_value from customers c inner join orders o on c.customer_id=o.customer_id where order_status='Completed' and  (o.quantity*o.unit_price)=( select max(o2.quantity*o2.unit_price) from orders o2 where o2.customer_id=o.customer_id and o2.order_status='Completed' );
+-- ERROR 1054 (42S22): Unknown column 'p.product_name' in 'field list'
+-- mysql> select  c.customer_id, c.full_name, o.order_id, o.product_name, o.order_value from customers c inner join orders o on c.customer_id=o.customer_id where order_status='Completed' and  (o.quantity*o.unit_price)=( select max(o2.quantity*o2.unit_price) from orders o2 where o2.customer_id=o.customer_id and o2.order_status='Completed' );
+-- ERROR 1054 (42S22): Unknown column 'o.order_value' in 'field list'
+-- mysql> SELECT 
+--     ->     c.customer_id,
+--     ->     c.full_name,
+--     ->     o.order_id,
+--     ->     o.product_name,
+--     ->     (o.quantity * o.unit_price) AS order_value
+--     -> FROM customers c
+--     -> INNER JOIN orders o 
+--     ->     ON c.customer_id = o.customer_id
+--     -> WHERE o.order_status = 'Completed'
+--     ->   AND (o.quantity * o.unit_price) = (
+--     ->       SELECT MAX(o2.quantity * o2.unit_price)
+--     ->       FROM orders o2
+--     ->       WHERE o2.customer_id = o.customer_id
+--     ->         AND o2.order_status = 'Completed'
+--     ->   );
+-- +-------------+--------------+----------+-------------------+-------------+
+-- | customer_id | full_name    | order_id | product_name      | order_value |
+-- +-------------+--------------+----------+-------------------+-------------+
+-- |           1 | Aarav Sharma |        3 | Headphones        |     2499.00 |
+-- |           2 | Priya Reddy  |        5 | Monitor           |    12999.00 |
+-- |           3 | Rahul Verma  |        7 | Laptop            |    55000.00 |
+-- |           4 | Ananya Rao   |       12 | Tablet            |    22000.00 |
+-- |           5 | Rohan Mehta  |       14 | Smart Watch       |     7999.00 |
+-- |           6 | Sneha Patel  |       17 | Yoga Mat          |     1299.00 |
+-- |           7 | Arjun Kumar  |       19 | Power Bank        |     3998.00 |
+-- |           8 | Neha Singh   |       21 | Camera            |    35000.00 |
+-- |           9 | Raj Malhotra |       24 | Gaming Headset    |     5999.00 |
+-- |          10 | Kavya Nair   |       26 | Printer           |     8999.00 |
+-- |          11 | Aditi Kapoor |       28 | Desk Lamp         |     2598.00 |
+-- |          13 | Riya Das     |       30 | Smartphone        |    30000.00 |
+-- |          15 | Aman Khan    |       32 | Bluetooth Speaker |     3999.00 |
+-- +-------------+--------------+----------+-------------------+-------------+
+-- 13 rows in set (0.00 sec)
+
+-- mysql> 
